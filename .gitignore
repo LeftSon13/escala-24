@@ -34,3 +34,5 @@ build/
 
 # Environment variables
 .env
+# Local Java configuration
+java21.ps1

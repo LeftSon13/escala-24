@@ -35,4 +35,9 @@ public interface DutyAssignmentRepository
                         Long firefighterId,
                         LocalDate startDate,
                         LocalDate endDate);
+
+        @EntityGraph(attributePaths = { "firefighter", "firefighter.user" })
+        List<DutyAssignment> findByDutyDateBetween(
+                        LocalDate startDate,
+                        LocalDate endDate);
 }

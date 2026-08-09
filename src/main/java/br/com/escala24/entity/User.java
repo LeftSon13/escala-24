@@ -2,14 +2,16 @@ package br.com.escala24.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "employees")
-public class Employee {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,19 +26,14 @@ public class Employee {
     @Column(nullable = false, length = 255)
     private String password;
 
-    @Column(nullable = false, unique = true, length = 50)
-    private String registration;
-
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private String phone;
+    private Role role;
 
     @Column(nullable = false)
-    private Boolean active = true;
+    private boolean active = true;
 
-    @Column(nullable = false)
-    private Boolean administrator = false;
-
-    public Employee() {
+    public User() {
     }
 
     public Long getId() {
@@ -67,35 +64,19 @@ public class Employee {
         this.password = password;
     }
 
-    public String getRegistration() {
-        return registration;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRegistration(String registration) {
-        this.registration = registration;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Boolean getActive() {
+    public boolean isActive() {
         return active;
     }
 
-    public void setActive(Boolean active) {
+    public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public Boolean getAdministrator() {
-        return administrator;
-    }
-
-    public void setAdministrator(Boolean administrator) {
-        this.administrator = administrator;
     }
 }

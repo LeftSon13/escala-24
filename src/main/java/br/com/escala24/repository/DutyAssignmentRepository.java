@@ -11,28 +11,28 @@ import br.com.escala24.entity.DayType;
 import br.com.escala24.entity.DutyAssignment;
 
 public interface DutyAssignmentRepository
-        extends JpaRepository<DutyAssignment, Long> {
+                extends JpaRepository<DutyAssignment, Long> {
 
-    @EntityGraph(attributePaths = {"firefighter", "firefighter.user"})
-    List<DutyAssignment> findByMonthlyScheduleIdOrderByDutyDateAsc(
-            Long monthlyScheduleId
-    );
+        @EntityGraph(attributePaths = { "firefighter", "firefighter.user" })
+        List<DutyAssignment> findByMonthlyScheduleIdOrderByDutyDateAsc(
+                        Long monthlyScheduleId);
 
-    boolean existsByMonthlyScheduleIdAndDutyDate(
-            Long monthlyScheduleId,
-            LocalDate dutyDate
-    );
+        boolean existsByMonthlyScheduleIdAndDutyDate(
+                        Long monthlyScheduleId,
+                        LocalDate dutyDate);
 
-    Optional<DutyAssignment>
-            findTopByFirefighterIdAndDutyDateBeforeOrderByDutyDateDesc(
-                    Long firefighterId,
-                    LocalDate dutyDate
-            );
+        Optional<DutyAssignment> findTopByFirefighterIdAndDutyDateBeforeOrderByDutyDateDesc(
+                        Long firefighterId,
+                        LocalDate dutyDate);
 
-    long countByFirefighterIdAndDayTypeAndDutyDateBetween(
-            Long firefighterId,
-            DayType dayType,
-            LocalDate startDate,
-            LocalDate endDate
-    );
+        long countByFirefighterIdAndDayTypeAndDutyDateBetween(
+                        Long firefighterId,
+                        DayType dayType,
+                        LocalDate startDate,
+                        LocalDate endDate);
+
+        boolean existsByFirefighterIdAndDutyDateBetween(
+                        Long firefighterId,
+                        LocalDate startDate,
+                        LocalDate endDate);
 }

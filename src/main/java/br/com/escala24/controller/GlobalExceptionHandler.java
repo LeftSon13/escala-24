@@ -12,6 +12,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import br.com.escala24.exception.EmailAlreadyExistsException;
+import br.com.escala24.exception.RegistrationAlreadyExistsException;
 import br.com.escala24.exception.InvalidCurrentPasswordException;
 import br.com.escala24.exception.PasswordConfirmationMismatchException;
 import br.com.escala24.exception.PasswordReuseException;
@@ -61,7 +63,9 @@ public class GlobalExceptionHandler {
         @ExceptionHandler({
                         MonthlyScheduleAlreadyExistsException.class,
                         MonthlyScheduleAlreadyPublishedException.class,
-                        PublishedScheduleModificationException.class
+                        PublishedScheduleModificationException.class,
+                        EmailAlreadyExistsException.class,
+                        RegistrationAlreadyExistsException.class
         })
         public ResponseEntity<ApiErrorResponse> handleConflict(
                         RuntimeException exception,

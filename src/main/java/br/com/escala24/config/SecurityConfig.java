@@ -35,6 +35,9 @@ public class SecurityConfig {
                                                                 "/api/users/me/password")
                                                 .authenticated()
                                                 .requestMatchers(
+                                                                "/api/firefighters/**")
+                                                .hasRole("ADMIN")
+                                                .requestMatchers(
                                                                 HttpMethod.GET,
                                                                 "/api/monthly-schedules/**")
                                                 .hasAnyRole(

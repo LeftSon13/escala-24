@@ -40,4 +40,19 @@ public interface DutyAssignmentRepository
         List<DutyAssignment> findByDutyDateBetween(
                         LocalDate startDate,
                         LocalDate endDate);
+
+        @EntityGraph(attributePaths = {
+                        "monthlySchedule",
+                        "firefighter",
+                        "firefighter.user"
+        })
+        Optional<DutyAssignment> findByMonthlyScheduleIdAndDutyDate(
+                        Long monthlyScheduleId,
+                        LocalDate dutyDate);
+
+        boolean existsByFirefighterIdAndDutyDateBetweenAndIdNot(
+                        Long firefighterId,
+                        LocalDate startDate,
+                        LocalDate endDate,
+                        Long excludedAssignmentId);
 }

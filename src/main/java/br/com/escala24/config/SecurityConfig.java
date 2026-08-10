@@ -13,53 +13,43 @@ import br.com.escala24.security.RestAuthenticationEntryPoint;
 @Configuration
 public class SecurityConfig {
 
-    @Bean
-    SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
-            RestAuthenticationEntryPoint authenticationEntryPoint,
-            RestAccessDeniedHandler accessDeniedHandler
-    ) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(
-                                SessionCreationPolicy.STATELESS
-                        )
-                )
-                .httpBasic(basic ->
-                        basic.authenticationEntryPoint(
-                                authenticationEntryPoint
-                        )
-                )
-                .exceptionHandling(exceptions ->
-                        exceptions
-                                .authenticationEntryPoint(
-                                        authenticationEntryPoint
-                                )
-                                .accessDeniedHandler(
-                                        accessDeniedHandler
-                                )
-                )
-                .authorizeHttpRequests(authorize ->
-                        authorize
-                                .requestMatchers(
-                                        HttpMethod.GET,
-                                        "/api/monthly-schedules/**"
-                                )
-                                .hasAnyRole(
-                                        "ADMIN",
-                                        "FIREFIGHTER"
-                                )
-                                .requestMatchers(
-                                        "/api/monthly-schedules/**"
-                                )
-                                .hasRole("ADMIN")
-                                .requestMatchers("/api/**")
-                                .authenticated()
-                                .anyRequest()
-                                .permitAll()
-                );
+        @Bean
+        SecurityFilterChain securityFilterChain(
+                        HttpSecurity http,
+                        RestAuthenticationEntryPoint authenticationEntryPoint,
+                        RestAccessDeniedHandler accessDeniedHandler) throws Exception {
+                http
+                                .csrf(csrf -> csrf.disable())
+                                .sessionManagement(session -> session.sessionCreationPolicy(
+                                                SessionCreationPolicy.STATELESS))
+                                .httpBasic(basic -> basic.authenticationEntryPoint(
+                                                authenticationEntryPoint))
+                                .exceptionHandling(exceptions -> exceptions
+                                                .authenticationEntryPoint(
+                                                                authenticationEntryPoint)
+                                                .accessDeniedHandler(
+                                                                accessDeniedHandler))
+                                .authorizeHttpRequests(authorize -> authorize
+                                                .requestMatchers(
+                                                                HttpMethod.PUT,
+                                                                "/api/users/me/password")
+                                                .authenticated()
+                                                .requestMatchers(
+                                                                HttpMethod.GET,
+                                                                "/api/monthly-schedules/**")
+                                                .hasAnyRole(
+                                                                "ADMIN",
+                                                                "FIREFIGHTER")
+                                                .requestMatchers(
+                                                                "/api/monthly-schedules/**")
+                                                .hasRole("ADMIN")
+                                                .requestMatchers("/api/**")
+                                                .hasAnyRole(
+                                                                "ADMIN",
+                                                                "FIREFIGHTER")
+                                                .anyRequest()
+                                                .permitAll());
 
-        return http.build();
-    }
+                return http.build();
+        }
 }

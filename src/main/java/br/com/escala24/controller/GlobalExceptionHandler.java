@@ -12,6 +12,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import br.com.escala24.exception.InvalidCurrentPasswordException;
+import br.com.escala24.exception.PasswordConfirmationMismatchException;
+import br.com.escala24.exception.PasswordReuseException;
 import br.com.escala24.dto.ApiErrorResponse;
 import br.com.escala24.exception.DutyAssignmentNotFoundException;
 import br.com.escala24.exception.FirefighterNotFoundException;
@@ -75,7 +78,10 @@ public class GlobalExceptionHandler {
                         InactiveFirefighterException.class,
                         MandatoryRestViolationException.class,
                         IncompleteMonthlyScheduleException.class,
-                        NoEligibleFirefighterException.class
+                        NoEligibleFirefighterException.class,
+                        InvalidCurrentPasswordException.class,
+                        PasswordConfirmationMismatchException.class,
+                        PasswordReuseException.class
         })
         public ResponseEntity<ApiErrorResponse> handleBusinessRule(
                         RuntimeException exception,

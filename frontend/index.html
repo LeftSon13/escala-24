@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <meta
+        name="description"
+        content="Painel de gerenciamento de escalas do Escala 24"
+    >
+    <title>Escala 24</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <section class="login-screen" id="login-screen">
+        <div class="login-decoration"></div>
+
+        <div class="login-brand">
+            <div class="brand-mark brand-mark-large">24</div>
+
+            <div>
+                <span class="brand-name">Escala</span>
+                <strong>24</strong>
+            </div>
+        </div>
+
+        <div class="login-content">
+            <div class="login-introduction">
+                <span class="eyebrow">Gestão inteligente de plantões</span>
+
+                <h1>
+                    Escalas equilibradas.<br>
+                    Equipes mais seguras.
+                </h1>
+
+                <p>
+                    Organize plantões, acompanhe indisponibilidades
+                    e mantenha sua equipe pronta para cada turno.
+                </p>
+
+                <div class="feature-list">
+                    <span>✓ Distribuição equilibrada</span>
+                    <span>✓ Descanso obrigatório</span>
+                    <span>✓ Gestão de indisponibilidades</span>
+                </div>
+            </div>
+
+            <form class="login-card" id="login-form">
+                <div class="login-card-header">
+                    <span class="status-dot"></span>
+                    <span>Ambiente de demonstração</span>
+                </div>
+
+                <h2>Bem-vindo de volta</h2>
+                <p>Entre para acessar o painel operacional.</p>
+
+                <label for="email">E-mail</label>
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value="admin@escala24.com"
+                    autocomplete="username"
+                    required
+                >
+
+                <label for="password">Senha</label>
+                <div class="password-field">
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        value="demonstracao"
+                        autocomplete="current-password"
+                        required
+                    >
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        id="password-toggle"
+                        aria-label="Mostrar senha"
+                    >
+                        ◉
+                    </button>
+                </div>
+
+                <button class="primary-button" type="submit">
+                    Acessar painel
+                    <span>→</span>
+                </button>
+
+                <p class="demo-message">
+                    Os dados desta primeira tela são demonstrativos.
+                </p>
+            </form>
+        </div>
+    </section>
+
+    <div class="app-shell hidden" id="app-shell">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-mark">24</div>
+                <div>
+                    <span>Escala</span>
+                    <strong>24</strong>
+                </div>
+            </div>
+
+            <nav class="main-navigation" aria-label="Menu principal">
+                <span class="navigation-label">OPERAÇÃO</span>
+
+                <button class="nav-item active" data-page="dashboard">
+                    <span class="nav-icon">⌂</span>
+                    Visão geral
+                </button>
+
+                <button class="nav-item" data-page="schedules">
+                    <span class="nav-icon">▦</span>
+                    Escalas mensais
+                </button>
+
+                <button class="nav-item" data-page="firefighters">
+                    <span class="nav-icon">♟</span>
+                    Bombeiros
+                </button>
+
+                <button class="nav-item" data-page="unavailabilities">
+                    <span class="nav-icon">◷</span>
+                    Indisponibilidades
+                    <span class="nav-badge">4</span>
+                </button>
+
+                <span class="navigation-label">ADMINISTRAÇÃO</span>
+
+                <button class="nav-item" data-page="holidays">
+                    <span class="nav-icon">◇</span>
+                    Feriados
+                </button>
+
+                <button class="nav-item" data-page="settings">
+                    <span class="nav-icon">⚙</span>
+                    Configurações
+                </button>
+            </nav>
+
+            <div class="sidebar-profile">
+                <div class="avatar">JV</div>
+                <div class="profile-copy">
+                    <strong>João Victor</strong>
+                    <span>Administrador</span>
+                </div>
+                <button class="profile-menu" aria-label="Opções do perfil">
+                    ⋮
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <p class="breadcrumb">Operação / Visão geral</p>
+                    <h1 id="page-title">Visão geral</h1>
+                </div>
+
+                <div class="topbar-actions">
+                    <button
+                        class="icon-button"
+                        aria-label="Notificações"
+                    >
+                        ♢
+                        <span class="notification-dot"></span>
+                    </button>
+
+                    <button class="secondary-button" id="logout-button">
+                        Sair
+                    </button>
+                </div>
+            </header>
+
+            <section class="dashboard-content" id="dashboard-page">
+                <div class="welcome-banner">
+                    <div>
+                        <span class="eyebrow">DOMINGO, 10 DE AGOSTO</span>
+                        <h2>Bom dia, João.</h2>
+                        <p>
+                            A operação está estável. Há quatro solicitações
+                            aguardando sua análise.
+                        </p>
+                    </div>
+
+                    <button class="banner-button" id="generate-button">
+                        <span>＋</span>
+                        Gerar escala mensal
+                    </button>
+                </div>
+
+                <div class="metrics-grid">
+                    <article class="metric-card">
+                        <div class="metric-icon blue">♟</div>
+                        <div>
+                            <span>Bombeiros ativos</span>
+                            <strong>24</strong>
+                            <small class="positive">↑ 2 neste mês</small>
+                        </div>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-icon green">✓</div>
+                        <div>
+                            <span>Plantões cobertos</span>
+                            <strong>31/31</strong>
+                            <small class="positive">100% da escala</small>
+                        </div>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-icon amber">◷</div>
+                        <div>
+                            <span>Solicitações pendentes</span>
+                            <strong>4</strong>
+                            <small>Requerem análise</small>
+                        </div>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-icon purple">▦</div>
+                        <div>
+                            <span>Próxima publicação</span>
+                            <strong>Set/26</strong>
+                            <small>Rascunho em andamento</small>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="dashboard-grid">
+                    <section class="panel calendar-panel">
+                        <div class="panel-header">
+                            <div>
+                                <span class="panel-label">ESCALA ATUAL</span>
+                                <h3>Agosto de 2026</h3>
+                            </div>
+
+                            <div class="calendar-controls">
+                                <button aria-label="Mês anterior">‹</button>
+                                <button class="today-button">Hoje</button>
+                                <button aria-label="Próximo mês">›</button>
+                            </div>
+                        </div>
+
+                        <div class="calendar-weekdays">
+                            <span>DOM</span>
+                            <span>SEG</span>
+                            <span>TER</span>
+                            <span>QUA</span>
+                            <span>QUI</span>
+                            <span>SEX</span>
+                            <span>SÁB</span>
+                        </div>
+
+                        <div class="calendar-grid" id="calendar-grid"></div>
+
+                        <div class="calendar-legend">
+                            <span><i class="legend-dot weekday"></i> Dia útil</span>
+                            <span><i class="legend-dot weekend"></i> Final de semana</span>
+                            <span><i class="legend-dot holiday"></i> Feriado</span>
+                        </div>
+                    </section>
+
+                    <aside class="panel activity-panel">
+                        <div class="panel-header">
+                            <div>
+                                <span class="panel-label">PRÓXIMOS PLANTÕES</span>
+                                <h3>Equipe escalada</h3>
+                            </div>
+                            <button class="text-button">Ver escala</button>
+                        </div>
+
+                        <div class="duty-list" id="duty-list"></div>
+                    </aside>
+                </div>
+
+                <section class="panel requests-panel">
+                    <div class="panel-header">
+                        <div>
+                            <span class="panel-label">AÇÃO NECESSÁRIA</span>
+                            <h3>Indisponibilidades pendentes</h3>
+                        </div>
+                        <button class="text-button">Ver todas</button>
+                    </div>
+
+                    <div class="request-table">
+                        <div class="request-row request-heading">
+                            <span>Bombeiro</span>
+                            <span>Tipo</span>
+                            <span>Período</span>
+                            <span>Status</span>
+                            <span>Ação</span>
+                        </div>
+
+                        <div class="request-row">
+                            <span class="person-cell">
+                                <i class="mini-avatar navy">RM</i>
+                                <span>
+                                    <strong>Rafael Martins</strong>
+                                    <small>REG-014</small>
+                                </span>
+                            </span>
+                            <span>Compromisso pessoal</span>
+                            <span>14–15 ago</span>
+                            <span><i class="status pending">Pendente</i></span>
+                            <span>
+                                <button class="row-action">Analisar</button>
+                            </span>
+                        </div>
+
+                        <div class="request-row">
+                            <span class="person-cell">
+                                <i class="mini-avatar teal">CS</i>
+                                <span>
+                                    <strong>Camila Souza</strong>
+                                    <small>REG-008</small>
+                                </span>
+                            </span>
+                            <span>Licença médica</span>
+                            <span>18–22 ago</span>
+                            <span><i class="status pending">Pendente</i></span>
+                            <span>
+                                <button class="row-action">Analisar</button>
+                            </span>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section class="placeholder-page hidden" id="placeholder-page">
+                <div class="placeholder-icon">◇</div>
+                <h2 id="placeholder-title">Módulo em construção</h2>
+                <p>
+                    Esta área já possui serviços no backend e será conectada
+                    ao painel nas próximas etapas.
+                </p>
+                <button class="primary-button compact" data-page="dashboard">
+                    Voltar à visão geral
+                </button>
+            </section>
+        </main>
+    </div>
+
+    <div class="toast hidden" id="toast">
+        <span class="toast-icon">✓</span>
+        <div>
+            <strong>Protótipo interativo</strong>
+            <p id="toast-message">Ação executada em modo demonstração.</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

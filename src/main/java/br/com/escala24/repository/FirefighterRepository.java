@@ -18,6 +18,9 @@ public interface FirefighterRepository
     @EntityGraph(attributePaths = "user")
     List<Firefighter> findByUserActiveTrueOrderByIdAsc();
 
+    @EntityGraph(attributePaths = "user")
+    Optional<Firefighter> findByUserEmail(String email);
+
     Optional<Firefighter> findByRegistration(String registration);
 
     boolean existsByRegistration(String registration);

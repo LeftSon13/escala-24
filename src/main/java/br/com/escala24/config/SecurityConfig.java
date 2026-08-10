@@ -35,6 +35,23 @@ public class SecurityConfig {
                                                                 "/api/users/me/password")
                                                 .authenticated()
                                                 .requestMatchers(
+                                                                HttpMethod.GET,
+                                                                "/api/unavailabilities/pending")
+                                                .hasRole("ADMIN")
+                                                .requestMatchers(
+                                                                HttpMethod.PATCH,
+                                                                "/api/unavailabilities/*/approval",
+                                                                "/api/unavailabilities/*/rejection")
+                                                .hasRole("ADMIN")
+                                                .requestMatchers(
+                                                                HttpMethod.POST,
+                                                                "/api/unavailabilities")
+                                                .hasRole("FIREFIGHTER")
+                                                .requestMatchers(
+                                                                HttpMethod.GET,
+                                                                "/api/unavailabilities/me")
+                                                .hasRole("FIREFIGHTER")
+                                                .requestMatchers(
                                                                 "/api/firefighters/**")
                                                 .hasRole("ADMIN")
                                                 .requestMatchers(

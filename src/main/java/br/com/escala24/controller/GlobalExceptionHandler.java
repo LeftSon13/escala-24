@@ -5,30 +5,35 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import br.com.escala24.exception.EmailAlreadyExistsException;
-import br.com.escala24.exception.RegistrationAlreadyExistsException;
-import br.com.escala24.exception.InvalidCurrentPasswordException;
-import br.com.escala24.exception.PasswordConfirmationMismatchException;
-import br.com.escala24.exception.PasswordReuseException;
 import br.com.escala24.dto.ApiErrorResponse;
+import br.com.escala24.exception.AdministratorRequiredException;
 import br.com.escala24.exception.DutyAssignmentNotFoundException;
+import br.com.escala24.exception.DutyReassignmentRequiredException;
+import br.com.escala24.exception.EmailAlreadyExistsException;
 import br.com.escala24.exception.FirefighterNotFoundException;
 import br.com.escala24.exception.FirefighterUnavailableForDutyException;
 import br.com.escala24.exception.InactiveFirefighterException;
 import br.com.escala24.exception.IncompleteMonthlyScheduleException;
+import br.com.escala24.exception.InvalidCurrentPasswordException;
+import br.com.escala24.exception.InvalidUnavailabilityPeriodException;
 import br.com.escala24.exception.MandatoryRestViolationException;
 import br.com.escala24.exception.MonthlyScheduleAlreadyExistsException;
 import br.com.escala24.exception.MonthlyScheduleAlreadyPublishedException;
 import br.com.escala24.exception.MonthlyScheduleNotFoundException;
 import br.com.escala24.exception.NoEligibleFirefighterException;
+import br.com.escala24.exception.PasswordConfirmationMismatchException;
+import br.com.escala24.exception.PasswordReuseException;
 import br.com.escala24.exception.PublishedScheduleModificationException;
+import br.com.escala24.exception.RegistrationAlreadyExistsException;
+import br.com.escala24.exception.UnavailabilityAlreadyReviewedException;
+import br.com.escala24.exception.UnavailabilityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
@@ -37,7 +42,8 @@ public class GlobalExceptionHandler {
         @ExceptionHandler({
                         MonthlyScheduleNotFoundException.class,
                         DutyAssignmentNotFoundException.class,
-                        FirefighterNotFoundException.class
+                        FirefighterNotFoundException.class,
+                        UnavailabilityNotFoundException.class
         })
         public ResponseEntity<ApiErrorResponse> handleNotFound(
                         RuntimeException exception,
@@ -65,13 +71,26 @@ public class GlobalExceptionHandler {
                         MonthlyScheduleAlreadyPublishedException.class,
                         PublishedScheduleModificationException.class,
                         EmailAlreadyExistsException.class,
-                        RegistrationAlreadyExistsException.class
+                        RegistrationAlreadyExistsException.class,
+                        UnavailabilityAlreadyReviewedException.class,
+                        DutyReassignmentRequiredException.class
         })
         public ResponseEntity<ApiErrorResponse> handleConflict(
                         RuntimeException exception,
                         HttpServletRequest request) {
                 return buildResponse(
                                 HttpStatus.CONFLICT,
+                                exception.getMessage(),
+                                request,
+                                Map.of());
+        }
+
+        @ExceptionHandler(AdministratorRequiredException.class)
+        public ResponseEntity<ApiErrorResponse> handleForbidden(
+                        AdministratorRequiredException exception,
+                        HttpServletRequest request) {
+                return buildResponse(
+                                HttpStatus.FORBIDDEN,
                                 exception.getMessage(),
                                 request,
                                 Map.of());
@@ -85,7 +104,8 @@ public class GlobalExceptionHandler {
                         NoEligibleFirefighterException.class,
                         InvalidCurrentPasswordException.class,
                         PasswordConfirmationMismatchException.class,
-                        PasswordReuseException.class
+                        PasswordReuseException.class,
+                        InvalidUnavailabilityPeriodException.class
         })
         public ResponseEntity<ApiErrorResponse> handleBusinessRule(
                         RuntimeException exception,
@@ -106,7 +126,8 @@ public class GlobalExceptionHandler {
                                 .stream()
                                 .collect(
                                                 Collectors.toMap(
-                                                                fieldError -> fieldError.getField(),
+                                                                fieldError -> fieldError
+                                                                                .getField(),
                                                                 fieldError -> {
                                                                         String message = fieldError
                                                                                         .getDefaultMessage();
@@ -115,7 +136,9 @@ public class GlobalExceptionHandler {
                                                                                         ? message
                                                                                         : "Valor inválido";
                                                                 },
-                                                                (firstMessage, ignored) -> firstMessage));
+                                                                (
+                                                                                firstMessage,
+                                                                                ignored) -> firstMessage));
 
                 return buildResponse(
                                 HttpStatus.BAD_REQUEST,

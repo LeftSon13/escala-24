@@ -36,6 +36,15 @@ public class SecurityConfig {
                                                 .authenticated()
                                                 .requestMatchers(
                                                                 HttpMethod.GET,
+                                                                "/api/holidays/**")
+                                                .hasAnyRole(
+                                                                "ADMIN",
+                                                                "FIREFIGHTER")
+                                                .requestMatchers(
+                                                                "/api/holidays/**")
+                                                .hasRole("ADMIN")
+                                                .requestMatchers(
+                                                                HttpMethod.GET,
                                                                 "/api/unavailabilities/pending")
                                                 .hasRole("ADMIN")
                                                 .requestMatchers(
@@ -63,7 +72,8 @@ public class SecurityConfig {
                                                 .requestMatchers(
                                                                 "/api/monthly-schedules/**")
                                                 .hasRole("ADMIN")
-                                                .requestMatchers("/api/**")
+                                                .requestMatchers(
+                                                                "/api/**")
                                                 .hasAnyRole(
                                                                 "ADMIN",
                                                                 "FIREFIGHTER")

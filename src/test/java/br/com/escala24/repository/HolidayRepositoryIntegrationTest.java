@@ -22,32 +22,53 @@ class HolidayRepositoryIntegrationTest {
     @Test
     void shouldFindAndListHolidaysInChronologicalOrder() {
         Holiday independenceDay = new Holiday();
-        independenceDay.setDate(LocalDate.of(2093, 9, 7));
-        independenceDay.setName("Independência do Brasil");
+        independenceDay.setDate(
+                LocalDate.of(2093, 9, 7)
+        );
+        independenceDay.setName(
+                "Independência do Brasil"
+        );
 
         Holiday newYear = new Holiday();
-        newYear.setDate(LocalDate.of(2093, 1, 1));
-        newYear.setName("Confraternização Universal");
+        newYear.setDate(
+                LocalDate.of(2093, 1, 1)
+        );
+        newYear.setName(
+                "Confraternização Universal"
+        );
 
         holidayRepository.saveAllAndFlush(
-                List.of(independenceDay, newYear)
+                List.of(
+                        independenceDay,
+                        newYear
+                )
         );
 
         Holiday savedHoliday = holidayRepository
-                .findByDate(LocalDate.of(2093, 9, 7))
+                .findByDate(
+                        LocalDate.of(2093, 9, 7)
+                )
                 .orElseThrow();
 
         assertThat(savedHoliday.getName())
-                .isEqualTo("Independência do Brasil");
-        assertThat(savedHoliday.getCreatedAt()).isNotNull();
+                .isEqualTo(
+                        "Independência do Brasil"
+                );
 
-        assertThat(holidayRepository
-                .existsByDate(LocalDate.of(2093, 1, 1)))
-                .isTrue();
+        assertThat(savedHoliday.getCreatedAt())
+                .isNotNull();
 
-        assertThat(holidayRepository
-                .existsByDate(LocalDate.of(2093, 1, 2)))
-                .isFalse();
+        assertThat(
+                holidayRepository.existsByDate(
+                        LocalDate.of(2093, 1, 1)
+                )
+        ).isTrue();
+
+        assertThat(
+                holidayRepository.existsByDate(
+                        LocalDate.of(2093, 1, 2)
+                )
+        ).isFalse();
 
         List<Holiday> holidays = holidayRepository
                 .findByDateBetweenOrderByDateAsc(

@@ -15,13 +15,18 @@ public class DayTypeClassifier {
 
     private final HolidayRepository holidayRepository;
 
-    public DayTypeClassifier(HolidayRepository holidayRepository) {
+    public DayTypeClassifier(
+            HolidayRepository holidayRepository
+    ) {
         this.holidayRepository = holidayRepository;
     }
 
     @Transactional(readOnly = true)
     public DayType classify(LocalDate date) {
-        Objects.requireNonNull(date, "A data é obrigatória");
+        Objects.requireNonNull(
+                date,
+                "A data é obrigatória"
+        );
 
         DayOfWeek dayOfWeek = date.getDayOfWeek();
 

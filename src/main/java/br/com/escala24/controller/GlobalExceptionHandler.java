@@ -19,6 +19,8 @@ import br.com.escala24.exception.DutyReassignmentRequiredException;
 import br.com.escala24.exception.EmailAlreadyExistsException;
 import br.com.escala24.exception.FirefighterNotFoundException;
 import br.com.escala24.exception.FirefighterUnavailableForDutyException;
+import br.com.escala24.exception.HolidayAlreadyExistsException;
+import br.com.escala24.exception.HolidayNotFoundException;
 import br.com.escala24.exception.InactiveFirefighterException;
 import br.com.escala24.exception.IncompleteMonthlyScheduleException;
 import br.com.escala24.exception.InvalidCurrentPasswordException;
@@ -43,7 +45,8 @@ public class GlobalExceptionHandler {
                         MonthlyScheduleNotFoundException.class,
                         DutyAssignmentNotFoundException.class,
                         FirefighterNotFoundException.class,
-                        UnavailabilityNotFoundException.class
+                        UnavailabilityNotFoundException.class,
+                        HolidayNotFoundException.class
         })
         public ResponseEntity<ApiErrorResponse> handleNotFound(
                         RuntimeException exception,
@@ -73,7 +76,8 @@ public class GlobalExceptionHandler {
                         EmailAlreadyExistsException.class,
                         RegistrationAlreadyExistsException.class,
                         UnavailabilityAlreadyReviewedException.class,
-                        DutyReassignmentRequiredException.class
+                        DutyReassignmentRequiredException.class,
+                        HolidayAlreadyExistsException.class
         })
         public ResponseEntity<ApiErrorResponse> handleConflict(
                         RuntimeException exception,
@@ -121,13 +125,13 @@ public class GlobalExceptionHandler {
         public ResponseEntity<ApiErrorResponse> handleValidation(
                         MethodArgumentNotValidException exception,
                         HttpServletRequest request) {
-                Map<String, String> fieldErrors = exception.getBindingResult()
+                Map<String, String> fieldErrors = exception
+                                .getBindingResult()
                                 .getFieldErrors()
                                 .stream()
                                 .collect(
                                                 Collectors.toMap(
-                                                                fieldError -> fieldError
-                                                                                .getField(),
+                                                                fieldError -> fieldError.getField(),
                                                                 fieldError -> {
                                                                         String message = fieldError
                                                                                         .getDefaultMessage();

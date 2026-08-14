@@ -20,6 +20,9 @@ import tools.jackson.databind.ObjectMapper;
 public class RestAuthenticationEntryPoint
         implements AuthenticationEntryPoint {
 
+    private static final String LOGIN_PATH =
+            "/api/auth/login";
+
     private final ObjectMapper objectMapper;
 
     public RestAuthenticationEntryPoint(
@@ -36,11 +39,15 @@ public class RestAuthenticationEntryPoint
     ) throws IOException {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
 
+        String message = isLoginRequest(request)
+                ? "Credenciais inválidas"
+                : "Autenticação necessária para acessar este recurso";
+
         ApiErrorResponse body = new ApiErrorResponse(
                 LocalDateTime.now(),
                 status.value(),
                 status.getReasonPhrase(),
-                "Autenticação necessária para acessar este recurso",
+                message,
                 request.getRequestURI(),
                 Map.of()
         );
@@ -54,6 +61,14 @@ public class RestAuthenticationEntryPoint
         objectMapper.writeValue(
                 response.getOutputStream(),
                 body
+        );
+    }
+
+    private boolean isLoginRequest(
+            HttpServletRequest request
+    ) {
+        return LOGIN_PATH.equals(
+                request.getRequestURI()
         );
     }
 }

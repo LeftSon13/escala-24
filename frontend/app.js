@@ -1,5 +1,9 @@
 const loginScreen = document.querySelector("#login-screen");
 const loginForm = document.querySelector("#login-form");
+const emailInput = document.querySelector("#email");
+const loginButton = loginForm.querySelector(
+    'button[type="submit"]'
+);
 const appShell = document.querySelector("#app-shell");
 const passwordInput = document.querySelector("#password");
 const passwordToggle = document.querySelector("#password-toggle");
@@ -12,6 +16,54 @@ const calendarGrid = document.querySelector("#calendar-grid");
 const dutyList = document.querySelector("#duty-list");
 const toast = document.querySelector("#toast");
 const toastMessage = document.querySelector("#toast-message");
+const profileName = document.querySelector(
+    ".profile-copy strong"
+);
+
+const profileRole = document.querySelector(
+    ".profile-copy span"
+);
+
+const profileAvatar = document.querySelector(
+    ".sidebar-profile .avatar"
+);
+
+const welcomeTitle = document.querySelector(
+    ".welcome-banner h2"
+);
+
+async function apiRequest(path, options = {}) {
+    const response = await fetch(path, {
+        credentials: "same-origin",
+        ...options,
+        headers: {
+            "Content-Type": "application/json",
+            ...options.headers
+        }
+    });
+
+    if (response.status === 204) {
+        return null;
+    }
+
+    const responseBody = await response.json();
+
+    if (!response.ok) {
+        const error = new Error(
+            responseBody.message ??
+            "Não foi possível concluir a operação."
+        );
+
+        error.status = response.status;
+        error.fieldErrors = responseBody.fieldErrors ?? {};
+
+        throw error;
+    }
+
+    return responseBody;
+}
+
+let authenticatedUser = null;
 
 const pageNames = {
     dashboard: "Visão geral",
@@ -59,22 +111,56 @@ const nextDuties = [
     }
 ];
 
-function openDashboard() {
+function getInitials(name) {
+    return name
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((part) => part.charAt(0))
+        .join("")
+        .toUpperCase();
+}
+
+function getRoleName(role) {
+    const roleNames = {
+        ADMIN: "Administrador",
+        FIREFIGHTER: "Bombeiro"
+    };
+
+    return roleNames[role] ?? role;
+}
+
+function applyAuthenticatedUser(user) {
+    authenticatedUser = user;
+
+    const firstName = user.name
+        .trim()
+        .split(/\s+/)[0];
+
+    profileName.textContent = user.name;
+    profileRole.textContent = getRoleName(user.role);
+    profileAvatar.textContent = getInitials(user.name);
+    welcomeTitle.textContent = `Bom dia, ${firstName}.`;
+}
+
+function openDashboard(user) {
+    applyAuthenticatedUser(user);
+
     loginScreen.classList.add("hidden");
     appShell.classList.remove("hidden");
+
     renderCalendar();
     renderDutyList();
 }
 
 function closeDashboard() {
+    authenticatedUser = null;
+
     appShell.classList.add("hidden");
     loginScreen.classList.remove("hidden");
+
     loginForm.reset();
-
-    document.querySelector("#email").value =
-        "admin@escala24.com";
-
-    passwordInput.value = "demonstracao";
+    emailInput.focus();
 }
 
 function navigateTo(page) {
@@ -146,8 +232,8 @@ function renderCalendar() {
             if (!entry.muted) {
                 const firefighter =
                     firefighterNames[
-                        (entry.day - 1) %
-                        firefighterNames.length
+                    (entry.day - 1) %
+                    firefighterNames.length
                     ];
 
                 dutyText = isHoliday
@@ -158,11 +244,10 @@ function renderCalendar() {
             return `
                 <div class="${classes}">
                     <span class="day-number">${entry.day}</span>
-                    ${
-                        dutyText
-                            ? `<span class="day-duty">${dutyText}</span>`
-                            : ""
-                    }
+                    ${dutyText
+                    ? `<span class="day-duty">${dutyText}</span>`
+                    : ""
+                }
                 </div>
             `;
         })
@@ -202,10 +287,51 @@ function showToast(message) {
     }, 3200);
 }
 
-loginForm.addEventListener("submit", (event) => {
+async function restoreSession() {
+    try {
+        const user = await apiRequest("/api/users/me");
+
+        openDashboard(user);
+    } catch (error) {
+        closeDashboard();
+
+        if (error.status !== 401) {
+            showToast(error.message);
+        }
+    }
+}
+
+loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    openDashboard();
-    showToast("Painel aberto em modo demonstração.");
+
+    loginButton.disabled = true;
+    loginButton.textContent = "Entrando...";
+
+    try {
+        const user = await apiRequest(
+            "/api/auth/login",
+            {
+                method: "POST",
+                body: JSON.stringify({
+                    email: emailInput.value,
+                    password: passwordInput.value
+                })
+            }
+        );
+
+        openDashboard(user);
+        showToast(`Bem-vindo, ${user.name}.`);
+    } catch (error) {
+        showToast(error.message);
+        passwordInput.focus();
+        passwordInput.select();
+    } finally {
+        loginButton.disabled = false;
+        loginButton.innerHTML = `
+            Acessar painel
+            <span>→</span>
+        `;
+    }
 });
 
 passwordToggle.addEventListener("click", () => {
@@ -223,8 +349,22 @@ passwordToggle.addEventListener("click", () => {
     );
 });
 
-logoutButton.addEventListener("click", () => {
-    closeDashboard();
+logoutButton.addEventListener("click", async () => {
+    logoutButton.disabled = true;
+    logoutButton.textContent = "Saindo...";
+
+    try {
+        await apiRequest("/api/auth/logout", {
+            method: "POST"
+        });
+
+        closeDashboard();
+    } catch (error) {
+        showToast(error.message);
+    } finally {
+        logoutButton.disabled = false;
+        logoutButton.textContent = "Sair";
+    }
 });
 
 document.querySelectorAll("[data-page]").forEach((button) => {
@@ -248,3 +388,5 @@ document.querySelectorAll(".row-action").forEach((button) => {
         );
     });
 });
+
+restoreSession();

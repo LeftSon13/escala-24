@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-    <meta
-        name="description"
-        content="Painel de gerenciamento de escalas do Escala 24"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Painel de gerenciamento de escalas do Escala 24">
     <title>Escala 24</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <section class="login-screen" id="login-screen">
         <div class="login-decoration"></div>
@@ -50,38 +46,19 @@
             <form class="login-card" id="login-form">
                 <div class="login-card-header">
                     <span class="status-dot"></span>
-                    <span>Ambiente de demonstração</span>
+                    <span>Ambiente seguro</span>
                 </div>
 
                 <h2>Bem-vindo de volta</h2>
                 <p>Entre para acessar o painel operacional.</p>
 
                 <label for="email">E-mail</label>
-                <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value="admin@escala24.com"
-                    autocomplete="username"
-                    required
-                >
+                <input id="email" name="email" type="email" autocomplete="username" required>
 
                 <label for="password">Senha</label>
                 <div class="password-field">
-                    <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        value="demonstracao"
-                        autocomplete="current-password"
-                        required
-                    >
-                    <button
-                        type="button"
-                        class="password-toggle"
-                        id="password-toggle"
-                        aria-label="Mostrar senha"
-                    >
+                    <input id="password" name="password" type="password" autocomplete="current-password" required>
+                    <button type="button" class="password-toggle" id="password-toggle" aria-label="Mostrar senha">
                         ◉
                     </button>
                 </div>
@@ -92,7 +69,7 @@
                 </button>
 
                 <p class="demo-message">
-                    Os dados desta primeira tela são demonstrativos.
+                    Use suas credenciais para acessar o Escala 24.
                 </p>
             </form>
         </div>
@@ -165,10 +142,7 @@
                 </div>
 
                 <div class="topbar-actions">
-                    <button
-                        class="icon-button"
-                        aria-label="Notificações"
-                    >
+                    <button class="icon-button" aria-label="Notificações">
                         ♢
                         <span class="notification-dot"></span>
                     </button>
@@ -351,11 +325,12 @@
     <div class="toast hidden" id="toast">
         <span class="toast-icon">✓</span>
         <div>
-            <strong>Protótipo interativo</strong>
-            <p id="toast-message">Ação executada em modo demonstração.</p>
+            <strong>Escala 24</strong>
+            <p id="toast-message">Operação concluída.</p>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=auth-session-1"></script>
 </body>
+
 </html>

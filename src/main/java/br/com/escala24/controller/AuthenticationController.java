@@ -1,7 +1,5 @@
 package br.com.escala24.controller;
 
-import java.util.Locale;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,8 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.escala24.dto.AuthenticatedUserResponse;
 import br.com.escala24.dto.LoginRequest;
-import br.com.escala24.entity.User;
-import br.com.escala24.repository.UserRepository;
+import br.com.escala24.service.AuthenticatedUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -27,17 +24,18 @@ import jakarta.validation.Valid;
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
+    private final AuthenticatedUserService authenticatedUserService;
+
     private final HttpSessionSecurityContextRepository
             securityContextRepository =
             new HttpSessionSecurityContextRepository();
 
     public AuthenticationController(
             AuthenticationManager authenticationManager,
-            UserRepository userRepository
+            AuthenticatedUserService authenticatedUserService
     ) {
         this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
+        this.authenticatedUserService = authenticatedUserService;
     }
 
     @PostMapping("/login")
@@ -67,20 +65,9 @@ public class AuthenticationController {
                 httpResponse
         );
 
-        String normalizedEmail = request.email()
-                .trim()
-                .toLowerCase(Locale.ROOT);
-
-        User user = userRepository
-                .findByEmail(normalizedEmail)
-                .orElseThrow();
-
         AuthenticatedUserResponse response =
-                new AuthenticatedUserResponse(
-                        user.getName(),
-                        user.getEmail(),
-                        user.getRole(),
-                        user.isMustChangePassword()
+                authenticatedUserService.getByEmail(
+                        request.email()
                 );
 
         return ResponseEntity.ok(response);

@@ -71,6 +71,41 @@ class AuthenticationIntegrationTest {
                 ));
     }
 
+    @Test
+    void shouldAuthenticateFirefighterAndCreateSession()
+            throws Exception {
+        createUser(
+                "Bombeiro",
+                "firefighter-login@escala24.com",
+                Role.FIREFIGHTER
+        );
+
+        mockMvc.perform(
+                post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "email": "firefighter-login@escala24.com",
+                                  "password": "secure-password"
+                                }
+                                """)
+        )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name")
+                        .value("Bombeiro"))
+                .andExpect(jsonPath("$.email")
+                        .value("firefighter-login@escala24.com"))
+                .andExpect(jsonPath("$.role")
+                        .value("FIREFIGHTER"))
+                .andExpect(jsonPath("$.mustChangePassword")
+                        .value(false))
+                .andExpect(request().sessionAttribute(
+                        HttpSessionSecurityContextRepository
+                                .SPRING_SECURITY_CONTEXT_KEY,
+                        notNullValue()
+                ));
+    }
+
     private User createUser(
             String name,
             String email,

@@ -49,6 +49,11 @@ public class SecurityConfig {
                         )
                         .permitAll()
                         .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/users/me"
+                        )
+                        .authenticated()
+                        .requestMatchers(
                                 HttpMethod.PUT,
                                 "/api/users/me/password"
                         )

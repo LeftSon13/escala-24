@@ -11,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import br.com.escala24.security.RestAccessDeniedHandler;
 import br.com.escala24.security.RestAuthenticationEntryPoint;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 public class SecurityConfig {
@@ -33,6 +34,19 @@ public class SecurityConfig {
                         basic.authenticationEntryPoint(
                                 authenticationEntryPoint
                         )
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/api/auth/logout")
+                        .logoutSuccessHandler((
+                                request,
+                                response,
+                                authentication
+                        ) -> response.setStatus(
+                                HttpServletResponse.SC_NO_CONTENT
+                        ))
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
                 )
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(

@@ -13,6 +13,9 @@ import br.com.escala24.dto.AuthenticatedUserResponse;
 import br.com.escala24.dto.PasswordChangeRequest;
 import br.com.escala24.service.AuthenticatedUserService;
 import br.com.escala24.service.PasswordChangeService;
+import br.com.escala24.service.SessionAuthenticationService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -21,13 +24,18 @@ public class UserAccountController {
 
     private final PasswordChangeService passwordChangeService;
     private final AuthenticatedUserService authenticatedUserService;
+    private final SessionAuthenticationService
+            sessionAuthenticationService;
 
     public UserAccountController(
             PasswordChangeService passwordChangeService,
-            AuthenticatedUserService authenticatedUserService
+            AuthenticatedUserService authenticatedUserService,
+            SessionAuthenticationService sessionAuthenticationService
     ) {
         this.passwordChangeService = passwordChangeService;
         this.authenticatedUserService = authenticatedUserService;
+        this.sessionAuthenticationService =
+                sessionAuthenticationService;
     }
 
     @GetMapping
@@ -45,12 +53,20 @@ public class UserAccountController {
     @PutMapping("/password")
     public ResponseEntity<Void> changePassword(
             Principal principal,
-            @Valid @RequestBody
-            PasswordChangeRequest request
+            @Valid @RequestBody PasswordChangeRequest request,
+            HttpServletRequest httpRequest,
+            HttpServletResponse httpResponse
     ) {
         passwordChangeService.changePassword(
                 principal.getName(),
                 request
+        );
+
+        sessionAuthenticationService.authenticateAndStore(
+                principal.getName(),
+                request.newPassword(),
+                httpRequest,
+                httpResponse
         );
 
         return ResponseEntity.noContent().build();

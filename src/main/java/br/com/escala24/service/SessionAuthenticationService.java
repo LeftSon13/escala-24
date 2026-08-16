@@ -5,6 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +17,20 @@ public class SessionAuthenticationService {
 
     private final AuthenticationManager authenticationManager;
 
+    private final SessionAuthenticationStrategy
+            sessionAuthenticationStrategy;
+
     private final HttpSessionSecurityContextRepository
             securityContextRepository =
             new HttpSessionSecurityContextRepository();
 
     public SessionAuthenticationService(
-            AuthenticationManager authenticationManager
+            AuthenticationManager authenticationManager,
+            SessionAuthenticationStrategy sessionAuthenticationStrategy
     ) {
         this.authenticationManager = authenticationManager;
+        this.sessionAuthenticationStrategy =
+                sessionAuthenticationStrategy;
     }
 
     public Authentication authenticateAndStore(
@@ -40,6 +47,12 @@ public class SessionAuthenticationService {
                                         password
                                 )
                 );
+
+        sessionAuthenticationStrategy.onAuthentication(
+                authentication,
+                request,
+                response
+        );
 
         SecurityContext securityContext =
                 SecurityContextHolder.createEmptyContext();

@@ -74,6 +74,43 @@ class AuthenticationIntegrationTest {
                         notNullValue()));
     }
 
+        @Test
+    void shouldChangeSessionIdAfterAuthentication()
+            throws Exception {
+        createUser(
+                "Administrador contra session fixation",
+                "session-fixation@escala24.com",
+                Role.ADMIN);
+
+        MockHttpSession existingSession =
+                new MockHttpSession();
+
+        String sessionIdBeforeLogin =
+                existingSession.getId();
+
+        MvcResult loginResult = mockMvc.perform(
+                post("/api/auth/login")
+                        .session(existingSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "email": "session-fixation@escala24.com",
+                                  "password": "secure-password"
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MockHttpSession authenticatedSession =
+                (MockHttpSession) loginResult
+                        .getRequest()
+                        .getSession(false);
+
+        assertThat(authenticatedSession).isNotNull();
+        assertThat(authenticatedSession.getId())
+                .isNotEqualTo(sessionIdBeforeLogin);
+    }
+
     @Test
     void shouldAuthenticateFirefighterAndCreateSession()
             throws Exception {

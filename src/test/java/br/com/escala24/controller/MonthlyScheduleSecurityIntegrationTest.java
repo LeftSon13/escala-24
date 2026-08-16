@@ -2,6 +2,7 @@ package br.com.escala24.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -110,6 +111,7 @@ class MonthlyScheduleSecurityIntegrationTest {
 
         mockMvc.perform(
                 post("/api/monthly-schedules")
+                        .with(csrf())
                         .with(httpBasic(
                                 firefighter.getEmail(),
                                 PASSWORD
@@ -144,6 +146,7 @@ class MonthlyScheduleSecurityIntegrationTest {
 
         mockMvc.perform(
                 post("/api/monthly-schedules")
+                        .with(csrf())
                         .with(httpBasic(
                                 administrator.getEmail(),
                                 PASSWORD

@@ -2,16 +2,17 @@ package br.com.escala24.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import br.com.escala24.IntegrationTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
@@ -19,13 +20,16 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.escala24.IntegrationTest;
 import br.com.escala24.entity.Role;
 import br.com.escala24.entity.User;
 import br.com.escala24.repository.UserRepository;
+import jakarta.servlet.http.Cookie;
 
 @IntegrationTest
 @AutoConfigureMockMvc
@@ -53,6 +57,7 @@ class AuthenticationIntegrationTest {
 
         mockMvc.perform(
                 post("/api/auth/login")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -75,6 +80,124 @@ class AuthenticationIntegrationTest {
     }
 
     @Test
+    void shouldChangeSessionIdAfterAuthentication()
+            throws Exception {
+        createUser(
+                "Administrador contra session fixation",
+                "session-fixation@escala24.com",
+                Role.ADMIN);
+
+        MockHttpSession existingSession =
+                new MockHttpSession();
+
+        String sessionIdBeforeLogin =
+                existingSession.getId();
+
+        MvcResult loginResult = mockMvc.perform(
+                post("/api/auth/login")
+                        .with(csrf())
+                        .session(existingSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "email": "session-fixation@escala24.com",
+                                  "password": "secure-password"
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MockHttpSession authenticatedSession =
+                (MockHttpSession) loginResult
+                        .getRequest()
+                        .getSession(false);
+
+        assertThat(authenticatedSession).isNotNull();
+        assertThat(authenticatedSession.getId())
+                .isNotEqualTo(sessionIdBeforeLogin);
+    }
+
+    @Test
+    @DirtiesContext(
+            methodMode = DirtiesContext.MethodMode.BEFORE_METHOD
+    )
+    void shouldExposeCsrfTokenBeforeAuthentication()
+            throws Exception {
+        mockMvc.perform(
+                get("/api/auth/csrf"))
+                .andExpect(status().isOk())
+                .andExpect(cookie().exists("XSRF-TOKEN"))
+                .andExpect(jsonPath("$.headerName")
+                        .value("X-XSRF-TOKEN"))
+                .andExpect(jsonPath("$.token")
+                        .isNotEmpty());
+    }
+
+    @Test
+    @DirtiesContext(
+            methodMode = DirtiesContext.MethodMode.BEFORE_METHOD
+    )
+    void shouldClearPreviousCsrfTokenAfterAuthentication()
+            throws Exception {
+        createUser(
+                "Administrador com rotação CSRF",
+                "csrf-rotation@escala24.com",
+                Role.ADMIN);
+
+        MvcResult csrfResult = mockMvc.perform(
+                get("/api/auth/csrf"))
+                .andExpect(status().isOk())
+                .andExpect(cookie().exists("XSRF-TOKEN"))
+                .andReturn();
+
+        Cookie csrfCookie = csrfResult
+                .getResponse()
+                .getCookie("XSRF-TOKEN");
+
+        assertThat(csrfCookie).isNotNull();
+
+        mockMvc.perform(
+                post("/api/auth/login")
+                        .cookie(csrfCookie)
+                        .header(
+                                "X-XSRF-TOKEN",
+                                csrfCookie.getValue()
+                        )
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "email": "csrf-rotation@escala24.com",
+                                  "password": "secure-password"
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(cookie().maxAge(
+                        "XSRF-TOKEN",
+                        0
+                ));
+    }
+
+    @Test
+    void shouldRejectLoginWithoutCsrfToken()
+            throws Exception {
+        createUser(
+                "Administrador sem token CSRF",
+                "missing-csrf@escala24.com",
+                Role.ADMIN);
+
+        mockMvc.perform(
+                post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "email": "missing-csrf@escala24.com",
+                                  "password": "secure-password"
+                                }
+                                """))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void shouldAuthenticateFirefighterAndCreateSession()
             throws Exception {
         createUser(
@@ -84,6 +207,7 @@ class AuthenticationIntegrationTest {
 
         mockMvc.perform(
                 post("/api/auth/login")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -115,6 +239,7 @@ class AuthenticationIntegrationTest {
 
         mockMvc.perform(
                 post("/api/auth/login")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -145,6 +270,7 @@ class AuthenticationIntegrationTest {
 
         MvcResult loginResult = mockMvc.perform(
                 post("/api/auth/login")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -188,6 +314,7 @@ class AuthenticationIntegrationTest {
 
         MvcResult loginResult = mockMvc.perform(
                 post("/api/auth/login")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -233,10 +360,9 @@ class AuthenticationIntegrationTest {
                                 "Autenticação necessária para acessar este recurso"))
                 .andExpect(jsonPath("$.path")
                         .value("/api/users/me"))
-                .andExpect(result -> assertThat(
-                        result.getRequest()
-                                .getSession(false))
-                        .isNull());
+                .andExpect(request().sessionAttributeDoesNotExist(
+                        HttpSessionSecurityContextRepository
+                                .SPRING_SECURITY_CONTEXT_KEY));
     }
 
     @Test
@@ -249,6 +375,7 @@ class AuthenticationIntegrationTest {
 
         MvcResult loginResult = mockMvc.perform(
                 post("/api/auth/login")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -273,6 +400,7 @@ class AuthenticationIntegrationTest {
 
         mockMvc.perform(
                 post("/api/auth/logout")
+                        .with(csrf())
                         .session(session))
                 .andExpect(status().isNoContent());
 
@@ -296,6 +424,7 @@ class AuthenticationIntegrationTest {
 
         MvcResult loginResult = mockMvc.perform(
                 post("/api/auth/login")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -316,6 +445,7 @@ class AuthenticationIntegrationTest {
 
         mockMvc.perform(
                 put("/api/users/me/password")
+                        .with(csrf())
                         .session(session)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -327,8 +457,10 @@ class AuthenticationIntegrationTest {
                                 """))
                 .andExpect(status().isNoContent());
 
-        SecurityContext securityContext = (SecurityContext) session.getAttribute(
-                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+        SecurityContext securityContext =
+                (SecurityContext) session.getAttribute(
+                        HttpSessionSecurityContextRepository
+                                .SPRING_SECURITY_CONTEXT_KEY);
 
         assertThat(securityContext).isNotNull();
 

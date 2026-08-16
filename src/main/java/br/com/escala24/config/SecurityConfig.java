@@ -1,5 +1,7 @@
 package br.com.escala24.config;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -8,6 +10,12 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.session.ChangeSessionIdAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfAuthenticationStrategy;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 
 import br.com.escala24.security.RestAccessDeniedHandler;
 import br.com.escala24.security.RestAuthenticationEntryPoint;
@@ -20,10 +28,16 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             RestAuthenticationEntryPoint authenticationEntryPoint,
-            RestAccessDeniedHandler accessDeniedHandler
+            RestAccessDeniedHandler accessDeniedHandler,
+            CsrfTokenRepository csrfTokenRepository
     ) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf
+                        .spa()
+                        .csrfTokenRepository(
+                                csrfTokenRepository
+                        )
+                )
                 .requestCache(cache -> cache.disable())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
@@ -57,6 +71,11 @@ public class SecurityConfig {
                         )
                 )
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/auth/csrf"
+                        )
+                        .permitAll()
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/auth/login"
@@ -133,6 +152,26 @@ public class SecurityConfig {
                 );
 
         return http.build();
+    }
+
+    @Bean
+    CsrfTokenRepository csrfTokenRepository() {
+        return CookieCsrfTokenRepository
+                .withHttpOnlyFalse();
+    }
+
+    @Bean
+    SessionAuthenticationStrategy sessionAuthenticationStrategy(
+            CsrfTokenRepository csrfTokenRepository
+    ) {
+        return new CompositeSessionAuthenticationStrategy(
+                List.of(
+                        new ChangeSessionIdAuthenticationStrategy(),
+                        new CsrfAuthenticationStrategy(
+                                csrfTokenRepository
+                        )
+                )
+        );
     }
 
     @Bean

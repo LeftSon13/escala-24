@@ -1,6 +1,7 @@
 package br.com.escala24.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -65,6 +66,7 @@ class UnavailabilityApiIntegrationTest {
             throws Exception {
         mockMvc.perform(
                 post("/api/unavailabilities")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(validRequest())
         )
@@ -83,6 +85,7 @@ class UnavailabilityApiIntegrationTest {
 
         mockMvc.perform(
                 post("/api/unavailabilities")
+                        .with(csrf())
                         .with(httpBasic(
                                 administrator.getEmail(),
                                 PASSWORD
@@ -104,6 +107,7 @@ class UnavailabilityApiIntegrationTest {
 
         mockMvc.perform(
                 post("/api/unavailabilities")
+                        .with(csrf())
                         .with(httpBasic(
                                 firefighter.getUser().getEmail(),
                                 PASSWORD
@@ -211,6 +215,7 @@ class UnavailabilityApiIntegrationTest {
                                 + requested.id()
                                 + "/approval"
                 )
+                        .with(csrf())
                         .with(httpBasic(
                                 administrator.getEmail(),
                                 PASSWORD
@@ -243,6 +248,7 @@ class UnavailabilityApiIntegrationTest {
     ) throws Exception {
         mockMvc.perform(
                 post("/api/unavailabilities")
+                        .with(csrf())
                         .with(httpBasic(
                                 firefighter.getUser().getEmail(),
                                 PASSWORD

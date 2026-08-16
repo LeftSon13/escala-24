@@ -2,6 +2,7 @@ package br.com.escala24.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -56,6 +57,7 @@ class PasswordChangeIntegrationTest {
             throws Exception {
         mockMvc.perform(
                 put("/api/users/me/password")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(validRequest())
         )
@@ -97,6 +99,7 @@ class PasswordChangeIntegrationTest {
 
         mockMvc.perform(
                 put("/api/users/me/password")
+                        .with(csrf())
                         .with(httpBasic(
                                 user.getEmail(),
                                 CURRENT_PASSWORD
@@ -145,6 +148,7 @@ class PasswordChangeIntegrationTest {
 
         mockMvc.perform(
                 put("/api/users/me/password")
+                        .with(csrf())
                         .with(httpBasic(
                                 user.getEmail(),
                                 CURRENT_PASSWORD
@@ -181,6 +185,7 @@ class PasswordChangeIntegrationTest {
 
         mockMvc.perform(
                 put("/api/users/me/password")
+                        .with(csrf())
                         .with(httpBasic(
                                 user.getEmail(),
                                 CURRENT_PASSWORD
@@ -217,6 +222,7 @@ class PasswordChangeIntegrationTest {
 
         mockMvc.perform(
                 put("/api/users/me/password")
+                        .with(csrf())
                         .with(httpBasic(
                                 user.getEmail(),
                                 CURRENT_PASSWORD

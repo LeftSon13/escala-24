@@ -16,9 +16,59 @@ const labels = {
 };
 const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
+const safeHttpMethods = new Set([
+    "GET",
+    "HEAD",
+    "OPTIONS",
+    "TRACE"
+]);
+
+function readCookie(name) {
+    const prefix = `${encodeURIComponent(name)}=`;
+    const cookie = document.cookie
+        .split("; ")
+        .find((item) => item.startsWith(prefix));
+
+    return cookie
+        ? decodeURIComponent(cookie.substring(prefix.length))
+        : null;
+}
+
+async function getCsrfToken() {
+    const cookieToken = readCookie("XSRF-TOKEN");
+
+    if (cookieToken) {
+        return cookieToken;
+    }
+
+    const response = await fetch("/api/auth/csrf", {
+        credentials: "same-origin",
+        headers: {
+            Accept: "application/json"
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error(
+            "Não foi possível iniciar a proteção da sessão."
+        );
+    }
+
+    const body = await response.json();
+
+    return readCookie("XSRF-TOKEN") ?? body.token;
+}
+
 async function apiRequest(path, options = {}) {
     const headers = { ...options.headers };
+    const method = (options.method ?? "GET").toUpperCase();
+
     if (options.body && !(options.body instanceof FormData)) headers["Content-Type"] = "application/json";
+
+    if (!safeHttpMethods.has(method)) {
+        headers["X-XSRF-TOKEN"] = await getCsrfToken();
+    }
+
     const response = await fetch(path, { credentials: "same-origin", ...options, headers });
     if (response.status === 204) return null;
     const isJson = (response.headers.get("content-type") ?? "").includes("application/json");

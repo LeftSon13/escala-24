@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-    <meta
-        name="description"
-        content="Painel de gerenciamento de escalas do Escala 24"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Painel de gerenciamento de escalas do Escala 24">
     <title>Escala 24</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=holiday-ui-1">
 </head>
+
 <body>
     <section class="login-screen" id="login-screen">
         <div class="login-decoration"></div>
@@ -47,41 +43,27 @@
                 </div>
             </div>
 
-            <form class="login-card" id="login-form">
+            <form
+                class="login-card"
+                id="login-form"
+                method="post"
+                action="/api/auth/login"
+            >
                 <div class="login-card-header">
                     <span class="status-dot"></span>
-                    <span>Ambiente de demonstração</span>
+                    <span>Ambiente seguro</span>
                 </div>
 
                 <h2>Bem-vindo de volta</h2>
                 <p>Entre para acessar o painel operacional.</p>
 
                 <label for="email">E-mail</label>
-                <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value="admin@escala24.com"
-                    autocomplete="username"
-                    required
-                >
+                <input id="email" name="email" type="email" autocomplete="username" required>
 
                 <label for="password">Senha</label>
                 <div class="password-field">
-                    <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        value="demonstracao"
-                        autocomplete="current-password"
-                        required
-                    >
-                    <button
-                        type="button"
-                        class="password-toggle"
-                        id="password-toggle"
-                        aria-label="Mostrar senha"
-                    >
+                    <input id="password" name="password" type="password" autocomplete="current-password" required>
+                    <button type="button" class="password-toggle" id="password-toggle" aria-label="Mostrar senha">
                         ◉
                     </button>
                 </div>
@@ -92,7 +74,7 @@
                 </button>
 
                 <p class="demo-message">
-                    Os dados desta primeira tela são demonstrativos.
+                    Use suas credenciais para acessar o Escala 24.
                 </p>
             </form>
         </div>
@@ -121,7 +103,7 @@
                     Escalas mensais
                 </button>
 
-                <button class="nav-item" data-page="firefighters">
+                <button class="nav-item" data-page="firefighters" data-role="ADMIN">
                     <span class="nav-icon">♟</span>
                     Bombeiros
                 </button>
@@ -129,7 +111,7 @@
                 <button class="nav-item" data-page="unavailabilities">
                     <span class="nav-icon">◷</span>
                     Indisponibilidades
-                    <span class="nav-badge">4</span>
+                    <span class="nav-badge hidden" id="pending-nav-badge">0</span>
                 </button>
 
                 <span class="navigation-label">ADMINISTRAÇÃO</span>
@@ -160,15 +142,12 @@
         <main class="main-content">
             <header class="topbar">
                 <div>
-                    <p class="breadcrumb">Operação / Visão geral</p>
+                    <p class="breadcrumb" id="breadcrumb">Operação / Visão geral</p>
                     <h1 id="page-title">Visão geral</h1>
                 </div>
 
                 <div class="topbar-actions">
-                    <button
-                        class="icon-button"
-                        aria-label="Notificações"
-                    >
+                    <button class="icon-button" aria-label="Notificações">
                         ♢
                         <span class="notification-dot"></span>
                     </button>
@@ -184,7 +163,7 @@
                     <div>
                         <span class="eyebrow">DOMINGO, 10 DE AGOSTO</span>
                         <h2>Bom dia, João.</h2>
-                        <p>
+                        <p id="welcome-summary">
                             A operação está estável. Há quatro solicitações
                             aguardando sua análise.
                         </p>
@@ -201,8 +180,8 @@
                         <div class="metric-icon blue">♟</div>
                         <div>
                             <span>Bombeiros ativos</span>
-                            <strong>24</strong>
-                            <small class="positive">↑ 2 neste mês</small>
+                            <strong id="active-firefighters-metric">—</strong>
+                            <small id="active-firefighters-detail">Dados do cadastro</small>
                         </div>
                     </article>
 
@@ -210,8 +189,8 @@
                         <div class="metric-icon green">✓</div>
                         <div>
                             <span>Plantões cobertos</span>
-                            <strong>31/31</strong>
-                            <small class="positive">100% da escala</small>
+                            <strong id="covered-duties-metric">—</strong>
+                            <small id="covered-duties-detail">Escala do mês atual</small>
                         </div>
                     </article>
 
@@ -219,17 +198,17 @@
                         <div class="metric-icon amber">◷</div>
                         <div>
                             <span>Solicitações pendentes</span>
-                            <strong>4</strong>
-                            <small>Requerem análise</small>
+                            <strong id="pending-unavailabilities-metric">—</strong>
+                            <small id="pending-unavailabilities-detail">Solicitações</small>
                         </div>
                     </article>
 
                     <article class="metric-card">
                         <div class="metric-icon purple">▦</div>
                         <div>
-                            <span>Próxima publicação</span>
-                            <strong>Set/26</strong>
-                            <small>Rascunho em andamento</small>
+                            <span>Escala do mês</span>
+                            <strong id="schedule-status-metric">—</strong>
+                            <small id="schedule-status-detail">Escala do mês</small>
                         </div>
                     </article>
                 </div>
@@ -239,13 +218,13 @@
                         <div class="panel-header">
                             <div>
                                 <span class="panel-label">ESCALA ATUAL</span>
-                                <h3>Agosto de 2026</h3>
+                                <h3 id="dashboard-calendar-title">Escala do mês atual</h3>
                             </div>
 
                             <div class="calendar-controls">
-                                <button aria-label="Mês anterior">‹</button>
-                                <button class="today-button">Hoje</button>
-                                <button aria-label="Próximo mês">›</button>
+                                <button id="dashboard-previous-month" aria-label="Mês anterior">‹</button>
+                                <button class="today-button" id="dashboard-current-month">Hoje</button>
+                                <button id="dashboard-next-month" aria-label="Próximo mês">›</button>
                             </div>
                         </div>
 
@@ -285,12 +264,12 @@
                     <div class="panel-header">
                         <div>
                             <span class="panel-label">AÇÃO NECESSÁRIA</span>
-                            <h3>Indisponibilidades pendentes</h3>
+                            <h3 id="dashboard-unavailability-title">Indisponibilidades pendentes</h3>
                         </div>
-                        <button class="text-button">Ver todas</button>
+                        <button class="text-button" data-page="unavailabilities">Ver todas</button>
                     </div>
 
-                    <div class="request-table">
+                    <div class="request-table" id="dashboard-unavailability-list">
                         <div class="request-row request-heading">
                             <span>Bombeiro</span>
                             <span>Tipo</span>
@@ -334,6 +313,186 @@
                 </section>
             </section>
 
+            <section class="module-page hidden" id="schedules-page">
+                <div class="module-header">
+                    <div>
+                        <span class="panel-label">OPERAÇÃO</span>
+                        <h2>Escalas mensais</h2>
+                        <p>Consulte os plantões, gere rascunhos e publique a escala mensal.</p>
+                    </div>
+                </div>
+
+                <section class="panel data-panel">
+                    <div class="toolbar">
+                        <div class="field-group compact-field">
+                            <label for="schedule-month">Mês</label>
+                            <select id="schedule-month"></select>
+                        </div>
+                        <div class="field-group compact-field">
+                            <label for="schedule-year">Ano</label>
+                            <input id="schedule-year" type="number" min="2000" max="2100">
+                        </div>
+                        <button class="secondary-button" id="load-schedule-button">Consultar</button>
+                        <button class="primary-button compact admin-only" id="generate-schedule-button">Gerar escala</button>
+                        <button class="success-button admin-only hidden" id="publish-schedule-button">Publicar</button>
+                    </div>
+                    <div class="module-feedback" id="schedule-feedback">Selecione o período da escala.</div>
+                    <div class="schedule-summary hidden" id="schedule-summary"></div>
+                    <div class="data-table hidden" id="schedule-table">
+                        <div class="data-row schedule-row data-heading">
+                            <span>Data</span><span>Classificação</span><span>Bombeiro</span><span>Horário</span><span>Ação</span>
+                        </div>
+                        <div id="schedule-assignment-list"></div>
+                    </div>
+                </section>
+            </section>
+
+            <section class="module-page hidden" id="firefighters-page">
+                <div class="module-header">
+                    <div>
+                        <span class="panel-label">ADMINISTRAÇÃO</span>
+                        <h2>Gerenciamento de bombeiros</h2>
+                        <p>Cadastre integrantes, consulte seus dados e controle o acesso à operação.</p>
+                    </div>
+                    <button class="primary-button compact" id="new-firefighter-button"><span>＋</span>Novo bombeiro</button>
+                </div>
+                <section class="panel data-panel">
+                    <div class="toolbar toolbar-search">
+                        <div class="field-group grow-field">
+                            <label for="firefighter-search">Buscar</label>
+                            <input id="firefighter-search" type="search" placeholder="Nome, e-mail ou matrícula">
+                        </div>
+                        <button class="secondary-button" id="load-firefighters-button">Atualizar</button>
+                    </div>
+                    <div class="module-feedback" id="firefighter-feedback">Carregando bombeiros...</div>
+                    <div class="data-table hidden" id="firefighter-table">
+                        <div class="data-row firefighter-row data-heading">
+                            <span>Bombeiro</span><span>Matrícula</span><span>Contato</span><span>Status</span><span>Ação</span>
+                        </div>
+                        <div id="firefighter-list"></div>
+                    </div>
+                </section>
+            </section>
+
+            <section class="module-page hidden" id="unavailabilities-page">
+                <div class="module-header">
+                    <div>
+                        <span class="panel-label">OPERAÇÃO</span>
+                        <h2 id="unavailability-page-title">Indisponibilidades</h2>
+                        <p id="unavailability-page-description">Acompanhe e gerencie solicitações de indisponibilidade.</p>
+                    </div>
+                    <button class="primary-button compact firefighter-only hidden" id="new-unavailability-button"><span>＋</span>Nova solicitação</button>
+                </div>
+                <section class="panel data-panel">
+                    <div class="toolbar">
+                        <div>
+                            <span class="panel-label">SOLICITAÇÕES</span>
+                            <h3 id="unavailability-list-title">Indisponibilidades</h3>
+                        </div>
+                        <button class="secondary-button" id="load-unavailabilities-button">Atualizar</button>
+                    </div>
+                    <div class="module-feedback" id="unavailability-feedback">Carregando solicitações...</div>
+                    <div class="data-table hidden" id="unavailability-table">
+                        <div class="data-row unavailability-row data-heading">
+                            <span>Solicitante</span><span>Tipo</span><span>Período</span><span>Status</span><span>Ação</span>
+                        </div>
+                        <div id="unavailability-list"></div>
+                    </div>
+                </section>
+            </section>
+
+            <section class="holiday-page hidden" id="holiday-page">
+                <div class="module-header">
+                    <div>
+                        <span class="panel-label">ADMINISTRAÇÃO</span>
+                        <h2>Gerenciamento de feriados</h2>
+                        <p>
+                            Consulte e mantenha as datas consideradas feriado
+                            na geração das escalas.
+                        </p>
+                    </div>
+
+                    <button class="primary-button compact admin-only" id="new-holiday-button">
+                        <span aria-hidden="true">＋</span>
+                        Novo feriado
+                    </button>
+                </div>
+
+                <section class="panel holiday-list-panel">
+                    <div class="panel-header">
+                        <div>
+                            <span class="panel-label">CALENDÁRIO</span>
+                            <h3>Feriados cadastrados</h3>
+                        </div>
+
+                        <div class="holiday-filter">
+                            <div class="holiday-year-field">
+                                <label for="holiday-year">Ano de referência</label>
+                                <input id="holiday-year" name="holidayYear" type="number" min="2000" max="2100"
+                                    required>
+                            </div>
+
+                            <button class="secondary-button" id="load-holidays-button" type="button">
+                                Consultar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="holiday-feedback" id="holiday-feedback" aria-live="polite">
+                        Selecione um ano para consultar os feriados.
+                    </div>
+
+                    <div class="holiday-table hidden" id="holiday-table">
+                        <div class="holiday-row holiday-heading">
+                            <span>Data</span>
+                            <span>Nome</span>
+                            <span>Ações</span>
+                        </div>
+
+                        <div id="holiday-list"></div>
+                    </div>
+                </section>
+            </section>
+
+            <section class="module-page hidden" id="settings-page">
+                <div class="module-header">
+                    <div>
+                        <span class="panel-label">CONTA</span>
+                        <h2>Segurança da conta</h2>
+                        <p>Atualize sua senha de acesso. A sessão continuará ativa após a alteração.</p>
+                    </div>
+                </div>
+                <section class="panel form-panel narrow-panel">
+                    <form id="password-change-form">
+                        <div class="form-heading">
+                            <span class="panel-label">CREDENCIAIS</span>
+                            <h3>Alterar senha</h3>
+                            <p id="password-change-notice">Use uma senha diferente da atual, com no mínimo 8 caracteres.</p>
+                        </div>
+                        <div class="field-group">
+                            <label for="current-password">Senha atual</label>
+                            <input id="current-password" type="password" autocomplete="current-password" required maxlength="72">
+                            <small class="field-error" data-error-for="currentPassword"></small>
+                        </div>
+                        <div class="form-grid two-columns">
+                            <div class="field-group">
+                                <label for="new-password">Nova senha</label>
+                                <input id="new-password" type="password" autocomplete="new-password" required minlength="8" maxlength="72">
+                                <small class="field-error" data-error-for="newPassword"></small>
+                            </div>
+                            <div class="field-group">
+                                <label for="new-password-confirmation">Confirmar nova senha</label>
+                                <input id="new-password-confirmation" type="password" autocomplete="new-password" required minlength="8" maxlength="72">
+                                <small class="field-error" data-error-for="newPasswordConfirmation"></small>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="primary-button compact" type="submit">Atualizar senha</button>
+                        </div>
+                    </form>
+                </section>
+            </section>
+
             <section class="placeholder-page hidden" id="placeholder-page">
                 <div class="placeholder-icon">◇</div>
                 <h2 id="placeholder-title">Módulo em construção</h2>
@@ -348,14 +507,62 @@
         </main>
     </div>
 
+    <dialog class="app-dialog" id="holiday-dialog">
+        <form method="dialog" class="dialog-card" id="holiday-form">
+            <div class="dialog-header"><div><span class="panel-label">FERIADO</span><h2 id="holiday-dialog-title">Novo feriado</h2></div><button class="dialog-close" value="cancel" aria-label="Fechar">×</button></div>
+            <input type="hidden" id="holiday-id">
+            <div class="field-group"><label for="holiday-date">Data</label><input id="holiday-date" type="date" required><small class="field-error" data-error-for="date"></small></div>
+            <div class="field-group"><label for="holiday-name">Nome</label><input id="holiday-name" type="text" required maxlength="150"><small class="field-error" data-error-for="name"></small></div>
+            <div class="dialog-actions"><button class="secondary-button" value="cancel">Cancelar</button><button class="primary-button compact" type="submit" value="default" id="save-holiday-button">Salvar</button></div>
+        </form>
+    </dialog>
+
+    <dialog class="app-dialog wide-dialog" id="firefighter-dialog">
+        <form method="dialog" class="dialog-card" id="firefighter-form">
+            <div class="dialog-header"><div><span class="panel-label">BOMBEIRO</span><h2>Novo bombeiro</h2></div><button class="dialog-close" value="cancel" aria-label="Fechar">×</button></div>
+            <div class="form-grid two-columns">
+                <div class="field-group"><label for="firefighter-name">Nome</label><input id="firefighter-name" required maxlength="150"><small class="field-error" data-error-for="name"></small></div>
+                <div class="field-group"><label for="firefighter-email">E-mail</label><input id="firefighter-email" type="email" required maxlength="150"><small class="field-error" data-error-for="email"></small></div>
+                <div class="field-group"><label for="firefighter-registration">Matrícula</label><input id="firefighter-registration" required maxlength="50"><small class="field-error" data-error-for="registration"></small></div>
+                <div class="field-group"><label for="firefighter-phone">Telefone</label><input id="firefighter-phone" required maxlength="20"><small class="field-error" data-error-for="phone"></small></div>
+            </div>
+            <div class="field-group"><label for="firefighter-temporary-password">Senha temporária</label><input id="firefighter-temporary-password" type="password" required minlength="8" maxlength="72"><small class="field-error" data-error-for="temporaryPassword"></small></div>
+            <div class="dialog-actions"><button class="secondary-button" value="cancel">Cancelar</button><button class="primary-button compact" type="submit" value="default">Cadastrar</button></div>
+        </form>
+    </dialog>
+
+    <dialog class="app-dialog" id="unavailability-dialog">
+        <form method="dialog" class="dialog-card" id="unavailability-form">
+            <div class="dialog-header"><div><span class="panel-label">INDISPONIBILIDADE</span><h2>Nova solicitação</h2></div><button class="dialog-close" value="cancel" aria-label="Fechar">×</button></div>
+            <div class="field-group"><label for="unavailability-type">Tipo</label><select id="unavailability-type" required><option value="">Selecione</option><option value="VACATION">Férias</option><option value="MEDICAL_LEAVE">Licença médica</option><option value="PERSONAL_COMMITMENT">Compromisso pessoal</option><option value="OTHER">Outro</option></select><small class="field-error" data-error-for="type"></small></div>
+            <div class="form-grid two-columns"><div class="field-group"><label for="unavailability-start-date">Data inicial</label><input id="unavailability-start-date" type="date" required><small class="field-error" data-error-for="startDate"></small></div><div class="field-group"><label for="unavailability-end-date">Data final</label><input id="unavailability-end-date" type="date" required><small class="field-error" data-error-for="endDate"></small></div></div>
+            <div class="field-group"><label for="unavailability-reason">Justificativa</label><textarea id="unavailability-reason" rows="4" maxlength="500"></textarea><small class="field-error" data-error-for="reason"></small></div>
+            <div class="dialog-actions"><button class="secondary-button" value="cancel">Cancelar</button><button class="primary-button compact" type="submit" value="default">Enviar solicitação</button></div>
+        </form>
+    </dialog>
+
+    <dialog class="app-dialog" id="reassignment-dialog">
+        <form method="dialog" class="dialog-card" id="reassignment-form">
+            <div class="dialog-header"><div><span class="panel-label">PLANTÃO</span><h2>Remanejar bombeiro</h2></div><button class="dialog-close" value="cancel" aria-label="Fechar">×</button></div>
+            <input type="hidden" id="reassignment-date">
+            <div class="field-group"><label for="reassignment-firefighter">Bombeiro substituto</label><select id="reassignment-firefighter" required></select></div>
+            <div class="dialog-actions"><button class="secondary-button" value="cancel">Cancelar</button><button class="primary-button compact" type="submit" value="default">Confirmar remanejamento</button></div>
+        </form>
+    </dialog>
+
+    <dialog class="app-dialog confirm-dialog" id="confirm-dialog">
+        <form method="dialog" class="dialog-card"><div class="dialog-header"><div><span class="panel-label">CONFIRMAÇÃO</span><h2 id="confirm-title">Confirmar operação</h2></div></div><p id="confirm-message"></p><div class="dialog-actions"><button class="secondary-button" value="cancel">Cancelar</button><button class="danger-button" value="confirm" id="confirm-action-button">Confirmar</button></div></form>
+    </dialog>
+
     <div class="toast hidden" id="toast">
         <span class="toast-icon">✓</span>
         <div>
-            <strong>Protótipo interativo</strong>
-            <p id="toast-message">Ação executada em modo demonstração.</p>
+            <strong>Escala 24</strong>
+            <p id="toast-message">Operação concluída.</p>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=frontend-api-1"></script>
 </body>
+
 </html>

@@ -66,11 +66,9 @@ button {
     overflow: hidden;
     color: var(--white);
     background:
-        radial-gradient(
-            circle at 15% 25%,
+        radial-gradient(circle at 15% 25%,
             rgba(53, 117, 190, 0.28),
-            transparent 31%
-        ),
+            transparent 31%),
         linear-gradient(135deg, #071426 0%, #0d2946 100%);
 }
 
@@ -173,7 +171,7 @@ button {
     letter-spacing: -0.045em;
 }
 
-.login-introduction > p {
+.login-introduction>p {
     max-width: 580px;
     color: #b9c9dc;
     font-size: 18px;
@@ -227,7 +225,7 @@ button {
     letter-spacing: -0.025em;
 }
 
-.login-card > p {
+.login-card>p {
     margin: 0 0 28px;
     color: var(--slate-500);
 }
@@ -386,11 +384,9 @@ button {
 
 .nav-item.active {
     color: var(--white);
-    background: linear-gradient(
-        90deg,
-        rgba(53, 126, 227, 0.24),
-        rgba(53, 126, 227, 0.08)
-    );
+    background: linear-gradient(90deg,
+            rgba(53, 126, 227, 0.24),
+            rgba(53, 126, 227, 0.08));
 }
 
 .nav-item.active::before {
@@ -554,11 +550,9 @@ button {
     overflow: hidden;
     color: var(--white);
     background:
-        radial-gradient(
-            circle at 83% 10%,
+        radial-gradient(circle at 83% 10%,
             rgba(96, 165, 250, 0.35),
-            transparent 35%
-        ),
+            transparent 35%),
         linear-gradient(120deg, #0c2642, #153d67);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
@@ -958,7 +952,7 @@ button {
     background: #268a87;
 }
 
-.person-cell > span {
+.person-cell>span {
     display: flex;
     flex-direction: column;
 }
@@ -1000,6 +994,497 @@ button {
 
 .row-action:hover {
     background: #f1f7ff;
+}
+
+.holiday-page {
+    min-height: calc(100vh - 92px);
+    padding: 30px 36px 48px;
+    background:
+        radial-gradient(circle at 92% 0,
+            rgba(59, 130, 246, 0.08),
+            transparent 28%),
+        var(--slate-50);
+}
+
+.module-header {
+    display: flex;
+    min-height: 132px;
+    padding: 26px 28px;
+    gap: 32px;
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--soft-shadow);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.module-header > div {
+    min-width: 0;
+}
+
+.module-header h2 {
+    margin: 6px 0 8px;
+    color: var(--slate-900);
+    font-size: 23px;
+    letter-spacing: -0.025em;
+}
+
+.module-header p {
+    max-width: 620px;
+    margin: 0;
+    color: var(--slate-500);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.module-header .primary-button {
+    width: auto;
+    min-width: 154px;
+    height: 44px;
+    margin: 0;
+    padding: 0 20px;
+    flex: 0 0 auto;
+}
+
+.holiday-list-panel {
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.holiday-list-panel .panel-header {
+    min-height: 88px;
+    padding: 20px 24px;
+    gap: 24px;
+    border-bottom: 1px solid var(--slate-100);
+}
+
+.holiday-filter {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.holiday-year-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.holiday-year-field label {
+    color: var(--slate-700);
+    font-size: 10px;
+    font-weight: 750;
+}
+
+.holiday-year-field input {
+    width: 132px;
+    height: 40px;
+    padding: 0 12px;
+    color: var(--slate-900);
+    background: var(--slate-50);
+    border: 1px solid var(--slate-200);
+    border-radius: 9px;
+    outline: none;
+    transition: var(--transition);
+}
+
+.holiday-year-field input:focus {
+    background: var(--white);
+    border-color: var(--blue-600);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.holiday-filter .secondary-button {
+    min-width: 108px;
+}
+
+.holiday-feedback {
+    display: flex;
+    min-height: 190px;
+    margin: 24px;
+    padding: 32px;
+    color: var(--slate-500);
+    background: var(--slate-50);
+    border: 1px dashed var(--slate-200);
+    border-radius: 12px;
+    font-size: 12px;
+    line-height: 1.6;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.holiday-table {
+    margin: 24px;
+    overflow: hidden;
+    border: 1px solid var(--slate-200);
+    border-radius: 12px;
+}
+
+.holiday-row {
+    display: grid;
+    min-height: 54px;
+    padding: 0 18px;
+    grid-template-columns: 160px 1fr 150px;
+    gap: 18px;
+    align-items: center;
+    border-bottom: 1px solid var(--slate-200);
+}
+
+.holiday-row:last-child {
+    border-bottom: 0;
+}
+
+.holiday-heading {
+    min-height: 42px;
+    color: var(--slate-500);
+    background: var(--slate-50);
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.holiday-row:not(.holiday-heading) {
+    color: var(--slate-700);
+    font-size: 11px;
+}
+
+.holiday-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+/* Módulos integrados */
+
+.module-page {
+    min-height: calc(100vh - 92px);
+    padding: 30px 36px 48px;
+    background: var(--slate-50);
+}
+
+.data-panel,
+.form-panel {
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.narrow-panel {
+    max-width: 820px;
+    padding: 26px;
+}
+
+.toolbar {
+    display: flex;
+    min-height: 88px;
+    padding: 20px 24px;
+    gap: 12px;
+    border-bottom: 1px solid var(--slate-100);
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.toolbar > div:first-child:not(.field-group) {
+    margin-right: auto;
+}
+
+.toolbar h3,
+.form-heading h3 {
+    margin: 5px 0 0;
+}
+
+.toolbar .primary-button {
+    width: auto;
+    height: 40px;
+    margin: 0;
+}
+
+.field-group {
+    display: flex;
+    margin-bottom: 18px;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.field-group label {
+    color: var(--slate-700);
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.field-group input,
+.field-group select,
+.field-group textarea {
+    width: 100%;
+    padding: 0 13px;
+    color: var(--slate-900);
+    background: var(--slate-50);
+    border: 1px solid var(--slate-200);
+    border-radius: 9px;
+    outline: none;
+    transition: var(--transition);
+}
+
+.field-group input,
+.field-group select {
+    height: 42px;
+}
+
+.field-group textarea {
+    padding-block: 12px;
+    resize: vertical;
+}
+
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus {
+    background: var(--white);
+    border-color: var(--blue-500);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.compact-field {
+    width: 140px;
+    margin: 0;
+}
+
+.grow-field {
+    min-width: 260px;
+    max-width: 520px;
+    margin: 0 auto 0 0;
+}
+
+.form-grid {
+    display: grid;
+    gap: 16px;
+}
+
+.two-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.form-heading {
+    margin-bottom: 24px;
+}
+
+.form-heading p {
+    color: var(--slate-500);
+    font-size: 12px;
+}
+
+.form-actions,
+.dialog-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.form-actions .primary-button,
+.dialog-actions .primary-button {
+    margin: 0;
+}
+
+.field-error {
+    min-height: 14px;
+    color: var(--red);
+    font-size: 10px;
+}
+
+.module-feedback {
+    display: flex;
+    min-height: 180px;
+    margin: 24px;
+    padding: 28px;
+    color: var(--slate-500);
+    background: var(--slate-50);
+    border: 1px dashed var(--slate-200);
+    border-radius: 12px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.data-table {
+    margin: 24px;
+    overflow-x: auto;
+    border: 1px solid var(--slate-200);
+    border-radius: 12px;
+}
+
+.data-row {
+    display: grid;
+    min-width: 760px;
+    min-height: 62px;
+    padding: 0 18px;
+    gap: 16px;
+    color: var(--slate-700);
+    border-bottom: 1px solid var(--slate-100);
+    align-items: center;
+    font-size: 11px;
+}
+
+.data-row:last-child {
+    border-bottom: 0;
+}
+
+.data-heading {
+    min-height: 42px;
+    color: var(--slate-500);
+    background: var(--slate-50);
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.firefighter-row {
+    grid-template-columns: 1.4fr 0.7fr 0.8fr 0.55fr 0.55fr;
+}
+
+.unavailability-row {
+    grid-template-columns: 1fr 0.9fr 1fr 0.55fr 1fr;
+}
+
+.schedule-row {
+    grid-template-columns: 0.6fr 1fr 1.1fr 1.2fr 0.65fr;
+}
+
+.data-row small {
+    display: block;
+    margin-top: 4px;
+    color: var(--slate-500);
+    font-size: 9px;
+}
+
+.row-actions {
+    display: flex;
+    gap: 7px;
+}
+
+.danger-link {
+    color: var(--red);
+    border-color: rgba(224, 77, 94, 0.3);
+}
+
+.danger-link:hover {
+    background: rgba(224, 77, 94, 0.06);
+}
+
+.success-button,
+.danger-button {
+    height: 40px;
+    padding: 0 17px;
+    color: var(--white);
+    border: 0;
+    border-radius: 10px;
+    font-weight: 750;
+}
+
+.success-button {
+    background: var(--green);
+}
+
+.danger-button {
+    background: var(--red);
+}
+
+.status.approved {
+    color: #08794d;
+    background: #dcf7eb;
+}
+
+.status.rejected {
+    color: #b52f40;
+    background: #fde8eb;
+}
+
+.schedule-summary {
+    display: flex;
+    margin: 24px 24px 0;
+    padding: 18px 20px;
+    gap: 14px;
+    background: #f4f8ff;
+    border: 1px solid #d9e7fb;
+    border-radius: 11px;
+    align-items: center;
+}
+
+.schedule-summary small {
+    margin-left: auto;
+    color: var(--slate-500);
+}
+
+.empty-inline {
+    padding: 30px;
+    color: var(--slate-500);
+    text-align: center;
+}
+
+.app-dialog {
+    width: min(540px, calc(100% - 32px));
+    max-width: none;
+    max-height: calc(100vh - 40px);
+    padding: 0;
+    background: transparent;
+    border: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: var(--radius-lg);
+}
+
+.app-dialog::backdrop {
+    background: rgba(7, 20, 38, 0.62);
+    backdrop-filter: blur(3px);
+}
+
+.dialog-card {
+    width: 100%;
+    padding: 26px;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 30px 90px rgba(7, 20, 38, 0.3);
+}
+
+.app-dialog.wide-dialog {
+    width: min(720px, calc(100vw - 40px));
+}
+
+.dialog-header {
+    display: flex;
+    margin-bottom: 24px;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.dialog-header h2 {
+    margin: 6px 0 0;
+    font-size: 21px;
+}
+
+.dialog-close {
+    width: 34px;
+    height: 34px;
+    color: var(--slate-500);
+    background: var(--slate-50);
+    border: 1px solid var(--slate-200);
+    border-radius: 9px;
+    font-size: 20px;
+}
+
+.confirm-dialog p {
+    margin: -8px 0 26px;
+    color: var(--slate-500);
+    line-height: 1.6;
+}
+
+.toast[data-type="error"] .toast-icon {
+    color: var(--red);
+    background: #fde8eb;
+}
+
+.toast[data-type="warning"] .toast-icon {
+    color: var(--amber);
+    background: #fff1d6;
 }
 
 .placeholder-page {
@@ -1136,7 +1621,9 @@ button {
     }
 
     .topbar,
-    .dashboard-content {
+    .dashboard-content,
+    .holiday-page,
+    .module-page {
         padding-inline: 20px;
     }
 }
@@ -1161,8 +1648,8 @@ button {
         grid-template-columns: 1fr auto;
     }
 
-    .request-row > span:nth-child(2),
-    .request-row > span:nth-child(3),
+    .request-row>span:nth-child(2),
+    .request-row>span:nth-child(3),
     .request-heading {
         display: none;
     }
@@ -1178,5 +1665,64 @@ button {
 
     .login-card {
         padding: 30px 24px;
+    }
+
+    .module-header,
+    .holiday-list-panel .panel-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .module-header .primary-button {
+        width: 100%;
+    }
+
+    .holiday-filter {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .holiday-year-field input,
+    .holiday-filter .secondary-button {
+        width: 100%;
+    }
+
+    .holiday-row {
+        grid-template-columns: 100px 1fr;
+    }
+
+    .holiday-row > span:last-child,
+    .holiday-heading > span:last-child {
+        display: none;
+    }
+
+    .two-columns {
+        grid-template-columns: 1fr;
+    }
+
+    .toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .compact-field,
+    .grow-field {
+        width: 100%;
+        max-width: none;
+    }
+
+    .toolbar .primary-button,
+    .toolbar .secondary-button,
+    .toolbar .success-button {
+        width: 100%;
+    }
+
+    .schedule-summary {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .schedule-summary small {
+        margin-left: 0;
     }
 }

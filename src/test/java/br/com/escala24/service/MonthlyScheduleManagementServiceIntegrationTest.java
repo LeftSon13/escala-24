@@ -7,7 +7,7 @@ import java.time.YearMonth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import br.com.escala24.IntegrationTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.escala24.dto.MonthlyScheduleGenerationRequest;
@@ -24,7 +24,7 @@ import br.com.escala24.repository.FirefighterRepository;
 import br.com.escala24.repository.MonthlyScheduleRepository;
 import br.com.escala24.repository.UserRepository;
 
-@SpringBootTest
+@IntegrationTest
 @Transactional
 class MonthlyScheduleManagementServiceIntegrationTest {
 

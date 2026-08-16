@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import br.com.escala24.IntegrationTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +32,7 @@ import br.com.escala24.repository.UnavailabilityRepository;
 import br.com.escala24.repository.UserRepository;
 import br.com.escala24.service.UnavailabilityManagementService;
 
-@SpringBootTest
+@IntegrationTest
 @AutoConfigureMockMvc
 @Transactional
 class UnavailabilityApiIntegrationTest {

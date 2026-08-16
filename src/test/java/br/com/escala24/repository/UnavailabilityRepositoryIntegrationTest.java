@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import br.com.escala24.IntegrationTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.escala24.entity.Firefighter;
@@ -18,7 +18,7 @@ import br.com.escala24.entity.UnavailabilityStatus;
 import br.com.escala24.entity.UnavailabilityType;
 import br.com.escala24.entity.User;
 
-@SpringBootTest
+@IntegrationTest
 @Transactional
 class UnavailabilityRepositoryIntegrationTest {
 

@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import br.com.escala24.IntegrationTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.escala24.entity.DutyAssignment;
@@ -41,7 +41,7 @@ import br.com.escala24.repository.HolidayRepository;
 import br.com.escala24.repository.UnavailabilityRepository;
 import br.com.escala24.repository.UserRepository;
 
-@SpringBootTest
+@IntegrationTest
 @Transactional
 class MonthlyScheduleGenerationServiceIntegrationTest {
 

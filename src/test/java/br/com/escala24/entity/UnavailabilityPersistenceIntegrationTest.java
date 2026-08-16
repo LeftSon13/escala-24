@@ -5,13 +5,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import br.com.escala24.IntegrationTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
-@SpringBootTest
+@IntegrationTest
 @Transactional
 class UnavailabilityPersistenceIntegrationTest {
 

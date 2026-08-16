@@ -8,14 +8,14 @@ import java.time.temporal.TemporalAdjusters;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import br.com.escala24.IntegrationTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.escala24.entity.DayType;
 import br.com.escala24.entity.Holiday;
 import br.com.escala24.repository.HolidayRepository;
 
-@SpringBootTest
+@IntegrationTest
 @Transactional
 class DayTypeClassifierIntegrationTest {
 

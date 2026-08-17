@@ -1,10 +1,19 @@
 # Escala 24
 
 [![Backend CI](https://github.com/LeftSon13/escala-24/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/LeftSon13/escala-24/actions/workflows/backend-ci.yml)
+[![Secret Scan](https://github.com/LeftSon13/escala-24/actions/workflows/secret-scan.yml/badge.svg)](https://github.com/LeftSon13/escala-24/actions/workflows/secret-scan.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Sistema web para gerenciamento e geração de escalas mensais de plantão para equipes de bombeiros.
 
 O Escala 24 centraliza o cadastro da equipe, indisponibilidades, feriados e escalas, aplicando regras operacionais para auxiliar a distribuição segura dos plantões.
+
+## Demonstração
+
+![Tela de login do Escala 24](docs/images/login.png)
+
+A interface é acessada pelo navegador e se comunica com a API por meio do
+Nginx, mantendo frontend e backend sob a mesma origem.
 
 ## Objetivo
 
@@ -328,6 +337,18 @@ Antes de disponibilizar a aplicação pela internet, é necessário:
 A versão 1.0 foi planejada para uso piloto por uma única corporação ou equipe de bombeiros.
 
 Recursos como múltiplas organizações, cobrança, planos comerciais, recuperação de senha por e-mail e infraestrutura gerenciada ficam reservados para versões futuras.
+
+## Versões e segurança
+
+As mudanças de cada versão são registradas no [CHANGELOG](CHANGELOG.md).
+
+Vulnerabilidades devem ser comunicadas de forma privada conforme a
+[política de segurança](SECURITY.md), sem publicar credenciais ou detalhes de
+exploração em issues abertas.
+
+## Licença
+
+Este projeto é distribuído sob a [licença MIT](LICENSE).
 
 ## Autor
 

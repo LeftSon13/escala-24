@@ -291,6 +291,12 @@ O workflow `Backend CI` é executado pelo GitHub Actions:
 
 A pipeline configura o Java 21, executa `mvn verify`, inicia o PostgreSQL temporário por meio do Testcontainers e publica o relatório do JaCoCo como artefato.
 
+## Cliente desktop
+
+O Escala 24 possui uma prova de conceito para Windows construída com Electron. Ela oferece uma janela nativa, detecção de indisponibilidade do servidor e geração de instalador `.exe`.
+
+Consulte o [guia do cliente desktop](docs/desktop-client.md) para entender a arquitetura, instalação, geração do instalador, limitações e possíveis evoluções.
+
 ## Estrutura do projeto
 
 ```text

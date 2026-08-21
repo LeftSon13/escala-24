@@ -36,3 +36,8 @@ build/
 .env
 # Local Java configuration
 java21.ps1
+
+# Electron
+desktop/node_modules/
+desktop/out/
+desktop/.webpack/

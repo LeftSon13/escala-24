@@ -1,0 +1,52 @@
+{
+  "name": "escala-24-desktop",
+  "productName": "Escala 24",
+  "version": "1.0.0",
+  "description": "Aplicativo desktop do sistema Escala 24",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "generate:icon": "node scripts/create-icon.cjs",
+    "dist": "node scripts/create-icon.cjs && electron-builder --win nsis"
+  },
+  "author": "João Vinicius Esquerdo de Andrade",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^43.4.1",
+    "electron-builder": "^26.15.3",
+    "png-to-ico": "^3.0.2"
+  },
+  "build": {
+    "appId": "br.com.escala24.desktop",
+    "productName": "Escala 24",
+    "directories": {
+      "output": "out"
+    },
+    "files": [
+      "assets/icon.ico",
+      "main.js",
+      "preload.js",
+      "offline.html",
+      "offline.js"
+    ],
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Escala 24"
+    },
+    "artifactName": "${productName}-Setup-${version}.${ext}"
+  }
+}

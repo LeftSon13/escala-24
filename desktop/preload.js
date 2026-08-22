@@ -6,5 +6,9 @@ const {
 contextBridge.exposeInMainWorld("desktop", {
     retryApplicationConnection() {
         ipcRenderer.send("retry-application-connection");
+    },
+
+    startLocalServices() {
+        return ipcRenderer.invoke("start-local-services");
     }
 });

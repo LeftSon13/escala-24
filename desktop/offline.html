@@ -68,6 +68,31 @@
             font: inherit;
             font-weight: 700;
         }
+
+.actions {
+    display: grid;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.actions button {
+    margin-top: 0;
+}
+
+.secondary {
+    background: #e8eefc;
+    color: #1d4ed8;
+    box-shadow: none;
+}
+
+#service-status {
+    min-height: 24px;
+    margin: 14px 0 0;
+    text-align: center;
+    color: #52617a;
+    font-size: 14px;
+}
+
     </style>
 </head>
 <body>
@@ -81,7 +106,17 @@
             <li>Inicie os serviços do Escala 24.</li>
             <li>Clique no botão abaixo.</li>
         </ol>
-        <button id="retry-button" type="button">Tentar novamente</button>
+        <div class="actions">
+        <button id="start-services-button" type="button">
+        Iniciar serviços
+        </button>
+
+        <button id="retry-button" class="secondary" type="button">
+        Tentar novamente
+        </button>
+        </div>
+
+        <p id="service-status" role="status" aria-live="polite"></p>
     </main>
     <script src="offline.js"></script>
 </body>

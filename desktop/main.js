@@ -1,6 +1,7 @@
 const {
     app,
     BrowserWindow,
+    dialog,
     ipcMain
 } = require("electron");
 
@@ -8,11 +9,13 @@ const {
     execFile
 } = require("node:child_process");
 
+const fs = require("node:fs");
 const path = require("node:path");
 
 const APP_URL = "http://localhost:3000";
 const APP_ORIGIN = new URL(APP_URL).origin;
-const COMPOSE_DIRECTORY = path.resolve(__dirname, "..");
+const DEVELOPMENT_COMPOSE_DIRECTORY =
+    path.resolve(__dirname, "..");
 
 function loadApplication(mainWindow) {
     mainWindow.loadURL(APP_URL);
@@ -24,16 +27,118 @@ function loadOfflineScreen(mainWindow) {
     );
 }
 
-function startLocalServices() {
-    return new Promise((resolve) => {
-        if (app.isPackaged) {
-            resolve({
-                success: false,
-                message: "A inicialização dos serviços pelo instalador ainda está em desenvolvimento."
-            });
-            return;
-        }
+function isValidComposeDirectory(directory) {
+    return (
+        fs.existsSync(
+            path.join(directory, "docker-compose.yml")
+        )
+        && fs.existsSync(
+            path.join(directory, ".env")
+        )
+    );
+}
 
+function getConfigurationFile() {
+    return path.join(
+        app.getPath("userData"),
+        "desktop-config.json"
+    );
+}
+
+function readSavedComposeDirectory() {
+    try {
+        const configuration = JSON.parse(
+            fs.readFileSync(
+                getConfigurationFile(),
+                "utf8"
+            )
+        );
+
+        if (
+            isValidComposeDirectory(
+                configuration.composeDirectory
+            )
+        ) {
+            return configuration.composeDirectory;
+        }
+    } catch (error) {
+        console.log(
+            "Nenhuma pasta válida foi configurada anteriormente."
+        );
+    }
+
+    return null;
+}
+
+function saveComposeDirectory(directory) {
+    fs.writeFileSync(
+        getConfigurationFile(),
+        JSON.stringify(
+            {
+                composeDirectory: directory
+            },
+            null,
+            2
+        ),
+        "utf8"
+    );
+}
+
+async function selectComposeDirectory() {
+    const selection = await dialog.showOpenDialog({
+        title: "Selecione a pasta de instalação do Escala 24",
+        properties: [
+            "openDirectory"
+        ]
+    });
+
+    if (selection.canceled) {
+        return null;
+    }
+
+    const selectedDirectory = selection.filePaths[0];
+
+    if (!isValidComposeDirectory(selectedDirectory)) {
+        await dialog.showMessageBox({
+            type: "warning",
+            title: "Pasta inválida",
+            message: "A pasta selecionada não contém docker-compose.yml e .env."
+        });
+
+        return null;
+    }
+
+    saveComposeDirectory(selectedDirectory);
+    return selectedDirectory;
+}
+
+async function resolveComposeDirectory() {
+    if (!app.isPackaged) {
+        return DEVELOPMENT_COMPOSE_DIRECTORY;
+    }
+
+    const savedDirectory =
+        readSavedComposeDirectory();
+
+    if (savedDirectory) {
+        return savedDirectory;
+    }
+
+    return selectComposeDirectory();
+}
+
+async function startLocalServices() {
+    const composeDirectory =
+        await resolveComposeDirectory();
+
+    if (!composeDirectory) {
+        return {
+            success: false,
+            message: "Selecione a pasta do Escala 24 para iniciar os serviços."
+        };
+    }
+
+    return new Promise((resolve) => {
         execFile(
             "docker",
             [
@@ -42,9 +147,9 @@ function startLocalServices() {
                 "escala-24",
                 "up",
                 "-d"
-],
+            ],
             {
-                cwd: COMPOSE_DIRECTORY,
+                cwd: composeDirectory,
                 windowsHide: true
             },
             (error) => {

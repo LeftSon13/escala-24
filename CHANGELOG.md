@@ -7,11 +7,28 @@ e o projeto utiliza [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ## [Não lançado]
 
+## [1.1.0] - 2026-08-24
+
 ### Adicionado
 
-- preparação do repositório para publicação aberta;
-- documentação da licença e da política de segurança;
-- verificação automatizada de segredos.
+- cliente desktop para Windows construído com Electron;
+- instalador NSIS com nome e ícone personalizados;
+- tela amigável para indisponibilidade dos serviços;
+- inicialização dos serviços locais pelo cliente desktop;
+- configuração automática do primeiro administrador;
+- criação segura e local das variáveis de ambiente;
+- pacote de implantação baseado em imagens versionadas;
+- publicação das imagens do backend e frontend no GitHub Container Registry;
+- geração automatizada do instalador pelo GitHub Actions;
+- publicação temporária do instalador como artefato da pipeline;
+- documentação de instalação, arquitetura e operação do cliente desktop;
+- licença, política de segurança e verificação automatizada de segredos.
+
+### Alterado
+
+- distribuição desktop preparada para utilizar imagens prontas do backend e frontend;
+- fluxo de primeira execução simplificado para não exigir edição manual do arquivo `.env`;
+- inicialização do aplicativo preparada para reutilizar configurações e dados existentes.
 
 ## [1.0.0] - 2026-08-17
 
@@ -31,5 +48,6 @@ e o projeto utiliza [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 - integração contínua com GitHub Actions;
 - guia de instalação, operação e segurança no README.
 
-[Não lançado]: https://github.com/LeftSon13/escala-24/compare/v1.0.0...HEAD
+[Não lançado]: https://github.com/LeftSon13/escala-24/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/LeftSon13/escala-24/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/LeftSon13/escala-24/releases/tag/v1.0.0

@@ -8,9 +8,12 @@ on:
     paths:
       - "desktop/**"
       - ".github/workflows/desktop-installer.yml"
+  push:
+    tags:
+      - "v*"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: desktop-installer-${{ github.workflow }}-${{ github.ref }}
@@ -47,13 +50,43 @@ jobs:
           node --check offline.js
           node --check setup.js
 
+      - name: Validate release version
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        run: |
+          $packageVersion = (Get-Content "package.json" | ConvertFrom-Json).version
+          $tagVersion = "${{ github.ref_name }}".TrimStart("v")
+
+          if ($packageVersion -ne $tagVersion) {
+            throw "A versão do package.json ($packageVersion) não corresponde à tag ($tagVersion)."
+          }
+
       - name: Build Windows installer
         run: npm run dist
 
-      - name: Upload installer
+      - name: Upload installer artifact
         uses: actions/upload-artifact@v4
         with:
           name: escala-24-windows-installer
           path: desktop/out/Escala 24-Setup-*.exe
           if-no-files-found: error
           retention-days: 14
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $installer = Get-ChildItem "out\Escala 24-Setup-*.exe" |
+            Select-Object -First 1
+
+          if (-not $installer) {
+            throw "O instalador não foi encontrado."
+          }
+
+          gh release create "${{ github.ref_name }}" `
+            "$($installer.FullName)" `
+            --verify-tag `
+            --title "Escala 24 ${{ github.ref_name }}" `
+            --generate-notes

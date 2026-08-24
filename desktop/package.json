@@ -29,6 +29,16 @@
       "offline.html",
       "offline.js"
     ],
+    "extraResources": [
+      {
+        "from": "deployment",
+        "to": "deployment",
+        "filter": [
+          "docker-compose.yml",
+          ".env.example"
+        ]
+      }
+    ],
     "win": {
       "icon": "assets/icon.ico",
       "target": [

@@ -27,7 +27,10 @@
       "main.js",
       "preload.js",
       "offline.html",
-      "offline.js"
+      "offline.js",
+      "setup.html",
+      "setup.css",
+      "setup.js"
     ],
     "extraResources": [
       {

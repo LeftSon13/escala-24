@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self'; script-src 'self'"
+    />
+    <title>Configurar Escala 24</title>
+    <link rel="stylesheet" href="setup.css" />
+  </head>
+  <body>
+    <main class="setup-layout">
+      <section class="introduction">
+        <div class="brand">
+          <span class="brand-icon">24</span>
+          <span>Escala <strong>24</strong></span>
+        </div>
+
+        <p class="eyebrow">CONFIGURAÇÃO INICIAL</p>
+
+        <h1>Prepare o sistema para o primeiro acesso.</h1>
+
+        <p class="description">
+          Informe os dados do administrador inicial. O aplicativo preparará a
+          configuração local e iniciará os serviços.
+        </p>
+
+        <ol class="steps">
+          <li>Configure o administrador inicial.</li>
+          <li>Inicie os serviços pelo Docker Desktop.</li>
+          <li>Altere a senha temporária no primeiro acesso.</li>
+        </ol>
+      </section>
+
+      <section class="setup-card">
+        <header>
+          <p class="secure-label">AMBIENTE LOCAL SEGURO</p>
+          <h2>Criar administrador inicial</h2>
+          <p>
+            Estes dados serão usados somente para preparar a primeira conta
+            administrativa.
+          </p>
+        </header>
+
+        <form id="setup-form">
+          <label for="admin-name">Nome</label>
+          <input
+            id="admin-name"
+            name="adminName"
+            type="text"
+            autocomplete="name"
+            maxlength="120"
+            required
+          />
+
+          <label for="admin-email">E-mail</label>
+          <input
+            id="admin-email"
+            name="adminEmail"
+            type="email"
+            autocomplete="email"
+            maxlength="160"
+            required
+          />
+
+          <label for="admin-password">Senha temporária</label>
+          <input
+            id="admin-password"
+            name="adminPassword"
+            type="password"
+            autocomplete="new-password"
+            minlength="12"
+            required
+          />
+
+          <label for="admin-password-confirmation">
+            Confirmar senha temporária
+          </label>
+          <input
+            id="admin-password-confirmation"
+            name="adminPasswordConfirmation"
+            type="password"
+            autocomplete="new-password"
+            minlength="12"
+            required
+          />
+
+          <p class="password-guidance">
+            Utilize pelo menos 12 caracteres. A troca será obrigatória no
+            primeiro acesso.
+          </p>
+
+          <button id="configure-button" type="submit">
+            Preparar Escala 24
+          </button>
+
+          <p
+            id="setup-status"
+            class="status"
+            role="status"
+            aria-live="polite"
+          ></p>
+        </form>
+      </section>
+    </main>
+
+    <script src="setup.js"></script>
+  </body>
+</html>

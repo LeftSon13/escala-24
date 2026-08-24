@@ -6,7 +6,7 @@ on:
       version:
         description: Version used in the image tag
         required: true
-        default: "1.0.0"
+        default: "1.1.0"
   push:
     tags:
       - "v*"
@@ -35,6 +35,18 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v6
 
+      - name: Prepare image version
+        id: version
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${GITHUB_REF_NAME#v}"
+          fi
+
+          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -48,5 +60,5 @@ jobs:
           context: ${{ matrix.context }}
           push: true
           tags: |
-            ${{ matrix.image }}:${{ inputs.version || github.ref_name }}
+            ${{ matrix.image }}:${{ steps.version.outputs.value }}
             ${{ matrix.image }}:latest

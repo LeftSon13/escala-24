@@ -473,7 +473,6 @@ button {
 
 .main-content {
     min-width: 0;
-    margin-left: 245px;
     grid-column: 2;
 }
 
@@ -1614,10 +1613,6 @@ button {
 
     .sidebar-profile {
         justify-content: center;
-    }
-
-    .main-content {
-        margin-left: 76px;
     }
 
     .topbar,

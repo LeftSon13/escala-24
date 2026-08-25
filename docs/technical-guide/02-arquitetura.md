@@ -3,7 +3,8 @@
 ## Objetivo deste capítulo
 
 Este capítulo explica como as partes do Escala 24 se conectam desde uma ação
-no navegador até a leitura ou gravação de dados no PostgreSQL.
+no navegador até a leitura ou gravação de dados no PostgreSQL. Também apresenta
+como o cliente desktop prepara a execução local dessa mesma aplicação.
 
 Ao final, você deverá conseguir:
 
@@ -33,6 +34,27 @@ flowchart LR
 Apesar de o desenho parecer uma fila, cada parte possui uma responsabilidade
 própria. Isso evita que uma única classe cuide de interface, segurança, regras
 de negócio e banco de dados ao mesmo tempo.
+
+O diagrama representa a arquitetura lógica da aplicação web. A distribuição
+desktop acrescenta uma forma de inicialização e encapsulamento, mas não altera
+as responsabilidades de frontend, backend ou banco de dados.
+
+```mermaid
+flowchart TD
+    E[Cliente Electron] --> O[Inicialização e orquestração local]
+    O --> D[Docker Compose]
+    D --> P[(PostgreSQL)]
+    D --> B[Backend Spring Boot]
+    D --> F[Frontend Nginx]
+    F --> U[Aplicação em http://localhost:3000]
+    U --> F
+    B --> P
+```
+
+Nesse cenário, o Electron não substitui o frontend nem o backend. Ele prepara
+o ambiente local e abre a interface web; o Nginx continua servindo o frontend,
+o Spring Boot continua executando a API e o PostgreSQL continua armazenando os
+dados.
 
 ### Analogia: uma corporação organizada
 
@@ -65,6 +87,12 @@ No Escala 24:
 > Uma correção importante: responsividade é principalmente uma responsabilidade
 > do CSS. O JavaScript pode auxiliar comportamentos da interface, mas seu papel
 > central neste projeto é dar vida à página e conectá-la ao backend.
+
+Na distribuição desktop, o Electron apresenta essa mesma interface web em uma
+janela nativa. Ele funciona como uma camada de apresentação e inicialização,
+não como uma substituição do frontend. A implementação dessa integração está
+em [`desktop/main.js`](../../desktop/main.js) e o fluxo orientado da primeira
+execução está em [`docs/desktop-client.md`](../../docs/desktop-client.md).
 
 ### Como a porta 3000 participa
 
@@ -364,6 +392,21 @@ O health check não comprova que todas as funcionalidades estão corretas. Ele
 responde a uma pergunta mais simples: “este serviço está pronto para receber
 tráfego?”
 
+### Execução pelo cliente desktop
+
+Quando a instalação desktop ainda não foi configurada, o Electron apresenta a
+tela de configuração inicial. O formulário está em
+[`desktop/setup.html`](../../desktop/setup.html) e seu comportamento em
+[`desktop/setup.js`](../../desktop/setup.js). Depois de validar os dados, o
+cliente prepara uma pasta privada de implantação, copia o Compose, cria o
+arquivo `.env` e executa `docker compose up -d`.
+
+O Compose usado pela distribuição desktop define os mesmos três serviços:
+PostgreSQL, backend e frontend. Ele expõe o frontend na porta `3000`, aguarda o
+PostgreSQL ficar saudável antes do backend e aguarda o health check do backend
+antes de iniciar o frontend. A configuração está em
+[`desktop/deployment/docker-compose.yml`](../../desktop/deployment/docker-compose.yml).
+
 Analogia: antes de abrir a recepção, confirma-se que o arquivo central está
 acessível e que a equipe responsável pela operação já iniciou o expediente.
 
@@ -394,6 +437,10 @@ sessões são controladas e operações mutáveis exigem proteção CSRF.
 A separação permite trocar ou ampliar partes do sistema com menor impacto. Isso
 não significa que toda arquitetura em camadas seja automaticamente rápida ou
 escalável; significa que as responsabilidades e dependências estão mais claras.
+
+A adição do cliente desktop amplia a forma de distribuição sem criar uma nova
+camada de negócio. O Electron coordena a execução local; as regras continuam no
+backend, a interface continua no frontend e os dados continuam no PostgreSQL.
 
 ## Mapa mental
 

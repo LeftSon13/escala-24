@@ -503,7 +503,6 @@ button {
     gap: 10px;
 }
 
-.icon-button,
 .secondary-button {
     height: 40px;
     color: var(--slate-700);
@@ -512,28 +511,11 @@ button {
     border-radius: 10px;
 }
 
-.icon-button {
-    position: relative;
-    width: 40px;
-}
-
-.notification-dot {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 6px;
-    height: 6px;
-    background: var(--red);
-    border: 2px solid var(--white);
-    border-radius: 50%;
-}
-
 .secondary-button {
     padding: 0 17px;
 }
 
-.secondary-button:hover,
-.icon-button:hover {
+.secondary-button:hover {
     background: var(--slate-50);
 }
 

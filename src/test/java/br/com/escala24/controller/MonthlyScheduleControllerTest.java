@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.DateTimeException;
@@ -34,6 +36,7 @@ import br.com.escala24.exception.MonthlyScheduleNotFoundException;
 import br.com.escala24.service.DutyReassignmentService;
 import br.com.escala24.service.MonthlyScheduleGenerationService;
 import br.com.escala24.service.MonthlyScheduleManagementService;
+import br.com.escala24.service.MonthlySchedulePdfService;
 
 @WebMvcTest(MonthlyScheduleController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -51,6 +54,9 @@ class MonthlyScheduleControllerTest {
 
     @MockitoBean
     private DutyReassignmentService reassignmentService;
+
+    @MockitoBean
+    private MonthlySchedulePdfService pdfService;
 
     @Test
     void shouldGenerateMonthlySchedule() throws Exception {
@@ -135,6 +141,28 @@ class MonthlyScheduleControllerTest {
                                 .value("PUBLISHED"));
 
         verify(managementService).publish(2027, 8);
+    }
+
+    @Test
+    void shouldExportPublishedScheduleAsPdf() throws Exception {
+        byte[] pdf = "%PDF-1.7".getBytes();
+
+        when(pdfService.exportPublishedSchedule(2027, 8))
+                .thenReturn(pdf);
+
+        mockMvc.perform(
+                get("/api/monthly-schedules/2027/8/pdf"))
+                .andExpect(status().isOk())
+                .andExpect(
+                        content().contentType(
+                                MediaType.APPLICATION_PDF))
+                .andExpect(
+                        header().string(
+                                "Content-Disposition",
+                                "attachment; filename=\"escala-2027-08.pdf\""))
+                .andExpect(content().bytes(pdf));
+
+        verify(pdfService).exportPublishedSchedule(2027, 8);
     }
 
     @Test

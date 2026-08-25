@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,7 @@ import br.com.escala24.dto.MonthlyScheduleGenerationResponse;
 import br.com.escala24.service.DutyReassignmentService;
 import br.com.escala24.service.MonthlyScheduleGenerationService;
 import br.com.escala24.service.MonthlyScheduleManagementService;
+import br.com.escala24.service.MonthlySchedulePdfService;
 import jakarta.validation.Valid;
 
 @RestController
@@ -31,15 +34,41 @@ public class MonthlyScheduleController {
     private final MonthlyScheduleGenerationService generationService;
     private final MonthlyScheduleManagementService managementService;
     private final DutyReassignmentService reassignmentService;
+    private final MonthlySchedulePdfService pdfService;
 
     public MonthlyScheduleController(
             MonthlyScheduleGenerationService generationService,
             MonthlyScheduleManagementService managementService,
-            DutyReassignmentService reassignmentService
+            DutyReassignmentService reassignmentService,
+            MonthlySchedulePdfService pdfService
     ) {
         this.generationService = generationService;
         this.managementService = managementService;
         this.reassignmentService = reassignmentService;
+        this.pdfService = pdfService;
+    }
+
+    @GetMapping(
+            value = "/{year}/{month}/pdf",
+            produces = MediaType.APPLICATION_PDF_VALUE
+    )
+    public ResponseEntity<byte[]> exportPdf(
+            @PathVariable int year,
+            @PathVariable int month
+    ) {
+        byte[] pdf = pdfService.exportPublishedSchedule(year, month);
+        String filename = "escala-%04d-%02d.pdf".formatted(
+                year,
+                month
+        );
+
+        return ResponseEntity.ok()
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + filename + "\""
+                )
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 
     @PostMapping

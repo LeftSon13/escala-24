@@ -36,6 +36,7 @@ import br.com.escala24.exception.PublishedScheduleModificationException;
 import br.com.escala24.exception.RegistrationAlreadyExistsException;
 import br.com.escala24.exception.UnavailabilityAlreadyReviewedException;
 import br.com.escala24.exception.UnavailabilityNotFoundException;
+import br.com.escala24.exception.UnpublishedScheduleExportException;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
@@ -109,7 +110,8 @@ public class GlobalExceptionHandler {
                         InvalidCurrentPasswordException.class,
                         PasswordConfirmationMismatchException.class,
                         PasswordReuseException.class,
-                        InvalidUnavailabilityPeriodException.class
+                        InvalidUnavailabilityPeriodException.class,
+                        UnpublishedScheduleExportException.class
         })
         public ResponseEntity<ApiErrorResponse> handleBusinessRule(
                         RuntimeException exception,

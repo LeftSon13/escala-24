@@ -195,17 +195,54 @@ scheduleMonth.innerHTML = monthNames.map((name, index) => `<option value="${inde
 async function loadSchedule() {
     const feedback = $("#schedule-feedback"); feedback.textContent = "Carregando escala..."; feedback.classList.remove("hidden"); $("#schedule-table").classList.add("hidden");
     try { state.schedule = await apiRequest(`/api/monthly-schedules/${Number(scheduleYear.value)}/${Number(scheduleMonth.value)}`); renderSchedule(); }
-    catch (error) { state.schedule = null; feedback.textContent = error.status === 404 ? "Nenhuma escala encontrada para este período." : error.message; $("#schedule-summary").classList.add("hidden"); $("#publish-schedule-button").classList.add("hidden"); }
+    catch (error) { state.schedule = null; feedback.textContent = error.status === 404 ? "Nenhuma escala encontrada para este período." : error.message; $("#schedule-summary").classList.add("hidden"); $("#publish-schedule-button").classList.add("hidden"); $("#export-schedule-button").classList.add("hidden"); }
 }
 function renderSchedule() {
     const item = state.schedule;
     $("#schedule-summary").innerHTML = `<strong>${monthNames[item.month - 1]} de ${item.year}</strong><span class="status ${item.status === "PUBLISHED" ? "approved" : "pending"}">${labels.statuses[item.status]}</span><small>Criada em ${formatDateTime(item.createdAt)}</small>`;
     $("#schedule-summary").classList.remove("hidden"); $("#publish-schedule-button").classList.toggle("hidden", state.user.role !== "ADMIN" || item.status !== "DRAFT");
+    $("#export-schedule-button").classList.toggle("hidden", item.status !== "PUBLISHED");
     $("#schedule-assignment-list").innerHTML = item.assignments.map((duty) => `<div class="data-row schedule-row"><span>${formatDate(duty.dutyDate)}</span><span>${labels.dayTypes[duty.dayType]}</span><span><strong>${escapeHtml(duty.firefighterName)}</strong><small>${escapeHtml(duty.firefighterRegistration)}</small></span><span>${formatDateTime(duty.startDateTime)}<br>${formatDateTime(duty.endDateTime)}</span><span>${state.user.role === "ADMIN" && item.status === "DRAFT" ? `<button class="row-action" data-reassign-date="${duty.dutyDate}">Remanejar</button>` : "—"}</span></div>`).join("");
     $("#schedule-feedback").classList.add("hidden"); $("#schedule-table").classList.remove("hidden");
 }
 async function generateSchedule() { const button = $("#generate-schedule-button"); setLoading(button, true, "Gerando..."); try { state.schedule = await apiRequest("/api/monthly-schedules", { method: "POST", body: JSON.stringify({ year: Number(scheduleYear.value), month: Number(scheduleMonth.value) }) }); renderSchedule(); showToast("Escala gerada."); } catch (error) { showToast(error.message, "error"); } finally { setLoading(button, false); } }
 async function publishSchedule() { try { state.schedule = await apiRequest(`/api/monthly-schedules/${state.schedule.year}/${state.schedule.month}/publication`, { method: "POST" }); renderSchedule(); showToast("Escala publicada."); } catch (error) { showToast(error.message, "error"); } }
+async function exportSchedulePdf() {
+    const button = $("#export-schedule-button");
+    setLoading(button, true, "Exportando...");
+
+    try {
+        const { year, month } = state.schedule;
+        const response = await fetch(
+            `/api/monthly-schedules/${year}/${month}/pdf`,
+            { credentials: "same-origin" }
+        );
+
+        if (!response.ok) {
+            const isJson = (response.headers.get("content-type") ?? "")
+                .includes("application/json");
+            const body = isJson ? await response.json() : null;
+            throw new Error(
+                body?.message
+                    ?? "Não foi possível exportar a escala."
+            );
+        }
+
+        const url = URL.createObjectURL(await response.blob());
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `escala-${year}-${String(month).padStart(2, "0")}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+        showToast("PDF exportado.");
+    } catch (error) {
+        showToast(error.message, "error");
+    } finally {
+        setLoading(button, false);
+    }
+}
 function openReassignment(date) { $("#reassignment-date").value = date; $("#reassignment-firefighter").innerHTML = `<option value="">Selecione</option>${state.firefighters.filter((item) => item.active).map((item) => `<option value="${item.firefighterId}">${escapeHtml(item.name)} — ${escapeHtml(item.registration)}</option>`).join("")}`; $("#reassignment-dialog").showModal(); }
 async function reassign(event) { event.preventDefault(); try { await apiRequest(`/api/monthly-schedules/${state.schedule.year}/${state.schedule.month}/assignments/${$("#reassignment-date").value}`, { method: "PUT", body: JSON.stringify({ firefighterId: Number($("#reassignment-firefighter").value) }) }); $("#reassignment-dialog").close(); await loadSchedule(); showToast("Plantão remanejado."); } catch (error) { showToast(error.message, "error"); } }
 
@@ -254,6 +291,7 @@ $("#firefighter-list").addEventListener("click", async (event) => { const id = e
 $("#new-unavailability-button").addEventListener("click", () => { $("#unavailability-form").reset(); clearErrors($("#unavailability-form")); $("#unavailability-dialog").showModal(); }); $("#load-unavailabilities-button").addEventListener("click", loadUnavailabilities); $("#unavailability-form").addEventListener("submit", createUnavailability);
 $("#unavailability-list").addEventListener("click", async (event) => { const approve = event.target.dataset.unavailabilityApprove, reject = event.target.dataset.unavailabilityReject, id = approve ?? reject; if (!id) return; try { await apiRequest(`/api/unavailabilities/${id}/${approve ? "approval" : "rejection"}`, { method: "PATCH" }); await loadUnavailabilities(); showToast(approve ? "Solicitação aprovada." : "Solicitação rejeitada."); } catch (error) { showToast(error.message, "error"); } });
 $("#load-schedule-button").addEventListener("click", loadSchedule); $("#generate-schedule-button").addEventListener("click", generateSchedule); $("#publish-schedule-button").addEventListener("click", async () => { if (await confirmAction("Publicar escala", "Depois de publicada, a escala não poderá ser modificada.")) publishSchedule(); });
+$("#export-schedule-button").addEventListener("click", exportSchedulePdf);
 $("#schedule-assignment-list").addEventListener("click", async (event) => { const date = event.target.dataset.reassignDate; if (date) { if (!state.firefighters.length) await loadFirefighters(); openReassignment(date); } }); $("#reassignment-form").addEventListener("submit", reassign); $("#password-change-form").addEventListener("submit", changePassword); $("#generate-button").addEventListener("click", () => navigateTo("schedules"));
 $("#dashboard-previous-month").addEventListener("click", () => shiftDashboardMonth(-1));
 $("#dashboard-next-month").addEventListener("click", () => shiftDashboardMonth(1));

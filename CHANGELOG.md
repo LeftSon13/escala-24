@@ -14,6 +14,8 @@ e o projeto utiliza [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - formulários modais passam a aceitar o envio pela tecla `Enter`, mantendo os botões de cancelamento apenas para fechar a janela.
 
+- layout do dashboard deixa de aplicar um recuo duplicado e passa a aproveitar corretamente o espaço disponível em janelas não maximizadas.
+
 ## [1.1.0] - 2026-08-24
 
 ### Adicionado

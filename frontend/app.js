@@ -243,7 +243,10 @@ $("#login-form").addEventListener("submit", async (event) => { event.preventDefa
 $("#password-toggle").addEventListener("click", () => $("#password").type = $("#password").type === "password" ? "text" : "password");
 $("#logout-button").addEventListener("click", async () => { try { await apiRequest("/api/auth/logout", { method: "POST" }); closeDashboard(); } catch (error) { showToast(error.message, "error"); } });
 $$("[data-page]").forEach((button) => button.addEventListener("click", () => navigateTo(button.dataset.page)));
-$$('.app-dialog button[value="cancel"]').forEach((button) => button.addEventListener("click", (event) => { event.preventDefault(); button.closest("dialog").close("cancel"); }));
+$$('.app-dialog button[value="cancel"]').forEach((button) => {
+    button.type = "button";
+    button.addEventListener("click", () => button.closest("dialog").close("cancel"));
+});
 $("#load-holidays-button").addEventListener("click", loadHolidays); $("#new-holiday-button").addEventListener("click", () => openHoliday()); $("#holiday-form").addEventListener("submit", saveHoliday);
 $("#holiday-list").addEventListener("click", async (event) => { const edit = event.target.dataset.holidayEdit, remove = event.target.dataset.holidayDelete; if (edit) openHoliday(state.holidays.find((item) => item.id === Number(edit))); if (remove && await confirmAction("Excluir feriado", "O feriado será removido permanentemente.")) { try { await apiRequest(`/api/holidays/${remove}`, { method: "DELETE" }); await loadHolidays(); showToast("Feriado excluído."); } catch (error) { showToast(error.message, "error"); } } });
 $("#new-firefighter-button").addEventListener("click", () => { $("#firefighter-form").reset(); clearErrors($("#firefighter-form")); $("#firefighter-dialog").showModal(); }); $("#load-firefighters-button").addEventListener("click", loadFirefighters); $("#firefighter-search").addEventListener("input", renderFirefighters); $("#firefighter-form").addEventListener("submit", registerFirefighter);

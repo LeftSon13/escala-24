@@ -508,7 +508,7 @@
     </div>
 
     <dialog class="app-dialog" id="holiday-dialog">
-        <form method="dialog" class="dialog-card" id="holiday-form">
+        <form class="dialog-card" id="holiday-form">
             <div class="dialog-header"><div><span class="panel-label">FERIADO</span><h2 id="holiday-dialog-title">Novo feriado</h2></div><button class="dialog-close" value="cancel" aria-label="Fechar">×</button></div>
             <input type="hidden" id="holiday-id">
             <div class="field-group"><label for="holiday-date">Data</label><input id="holiday-date" type="date" required><small class="field-error" data-error-for="date"></small></div>
@@ -518,7 +518,7 @@
     </dialog>
 
     <dialog class="app-dialog wide-dialog" id="firefighter-dialog">
-        <form method="dialog" class="dialog-card" id="firefighter-form">
+        <form class="dialog-card" id="firefighter-form">
             <div class="dialog-header"><div><span class="panel-label">BOMBEIRO</span><h2>Novo bombeiro</h2></div><button class="dialog-close" value="cancel" aria-label="Fechar">×</button></div>
             <div class="form-grid two-columns">
                 <div class="field-group"><label for="firefighter-name">Nome</label><input id="firefighter-name" required maxlength="150"><small class="field-error" data-error-for="name"></small></div>
@@ -532,7 +532,7 @@
     </dialog>
 
     <dialog class="app-dialog" id="unavailability-dialog">
-        <form method="dialog" class="dialog-card" id="unavailability-form">
+        <form class="dialog-card" id="unavailability-form">
             <div class="dialog-header"><div><span class="panel-label">INDISPONIBILIDADE</span><h2>Nova solicitação</h2></div><button class="dialog-close" value="cancel" aria-label="Fechar">×</button></div>
             <div class="field-group"><label for="unavailability-type">Tipo</label><select id="unavailability-type" required><option value="">Selecione</option><option value="VACATION">Férias</option><option value="MEDICAL_LEAVE">Licença médica</option><option value="PERSONAL_COMMITMENT">Compromisso pessoal</option><option value="OTHER">Outro</option></select><small class="field-error" data-error-for="type"></small></div>
             <div class="form-grid two-columns"><div class="field-group"><label for="unavailability-start-date">Data inicial</label><input id="unavailability-start-date" type="date" required><small class="field-error" data-error-for="startDate"></small></div><div class="field-group"><label for="unavailability-end-date">Data final</label><input id="unavailability-end-date" type="date" required><small class="field-error" data-error-for="endDate"></small></div></div>
@@ -542,7 +542,7 @@
     </dialog>
 
     <dialog class="app-dialog" id="reassignment-dialog">
-        <form method="dialog" class="dialog-card" id="reassignment-form">
+        <form class="dialog-card" id="reassignment-form">
             <div class="dialog-header"><div><span class="panel-label">PLANTÃO</span><h2>Remanejar bombeiro</h2></div><button class="dialog-close" value="cancel" aria-label="Fechar">×</button></div>
             <input type="hidden" id="reassignment-date">
             <div class="field-group"><label for="reassignment-firefighter">Bombeiro substituto</label><select id="reassignment-firefighter" required></select></div>

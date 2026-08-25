@@ -8,6 +8,7 @@ e o projeto utiliza [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 ## [Não lançado]
 
 ### Corrigido
+- data exibida no cabeçalho do dashboard passa a ser calculada dinamicamente conforme a data do computador.
 
 - configuração inicial do cliente desktop passa a utilizar a mesma versão do instalador ao selecionar as imagens do backend e frontend.
 

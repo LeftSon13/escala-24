@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.escala24.dto.DutyAssignmentResponse;
@@ -24,6 +25,8 @@ import br.com.escala24.service.DutyReassignmentService;
 import br.com.escala24.service.MonthlyScheduleGenerationService;
 import br.com.escala24.service.MonthlyScheduleManagementService;
 import br.com.escala24.service.MonthlySchedulePdfService;
+import br.com.escala24.service.MonthlySchedulePdfLayout;
+import br.com.escala24.service.MonthlyScheduleSpreadsheetService;
 import jakarta.validation.Valid;
 
 @RestController
@@ -35,17 +38,45 @@ public class MonthlyScheduleController {
     private final MonthlyScheduleManagementService managementService;
     private final DutyReassignmentService reassignmentService;
     private final MonthlySchedulePdfService pdfService;
+    private final MonthlyScheduleSpreadsheetService spreadsheetService;
 
     public MonthlyScheduleController(
             MonthlyScheduleGenerationService generationService,
             MonthlyScheduleManagementService managementService,
             DutyReassignmentService reassignmentService,
-            MonthlySchedulePdfService pdfService
+            MonthlySchedulePdfService pdfService,
+            MonthlyScheduleSpreadsheetService spreadsheetService
     ) {
         this.generationService = generationService;
         this.managementService = managementService;
         this.reassignmentService = reassignmentService;
         this.pdfService = pdfService;
+        this.spreadsheetService = spreadsheetService;
+    }
+
+    @GetMapping(
+            value = "/{year}/{month}/xlsx",
+            produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    public ResponseEntity<byte[]> exportSpreadsheet(
+            @PathVariable int year,
+            @PathVariable int month
+    ) {
+        byte[] spreadsheet = spreadsheetService.exportPublishedSchedule(
+                year,
+                month
+        );
+        String filename = "escala-%04d-%02d.xlsx".formatted(year, month);
+
+        return ResponseEntity.ok()
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + filename + "\""
+                )
+                .contentType(MediaType.parseMediaType(
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                ))
+                .body(spreadsheet);
     }
 
     @GetMapping(
@@ -54,12 +85,20 @@ public class MonthlyScheduleController {
     )
     public ResponseEntity<byte[]> exportPdf(
             @PathVariable int year,
-            @PathVariable int month
+            @PathVariable int month,
+            @RequestParam(defaultValue = "list") String layout
     ) {
-        byte[] pdf = pdfService.exportPublishedSchedule(year, month);
-        String filename = "escala-%04d-%02d.pdf".formatted(
+        MonthlySchedulePdfLayout pdfLayout =
+                MonthlySchedulePdfLayout.from(layout);
+        byte[] pdf = pdfService.exportPublishedSchedule(
                 year,
-                month
+                month,
+                pdfLayout
+        );
+        String filename = "escala-%04d-%02d-%s.pdf".formatted(
+                year,
+                month,
+                layout.toLowerCase()
         );
 
         return ResponseEntity.ok()

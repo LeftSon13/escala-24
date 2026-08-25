@@ -2,8 +2,11 @@ package br.com.escala24.service;
 
 import java.io.ByteArrayOutputStream;
 import java.time.Clock;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Locale;
@@ -19,8 +22,6 @@ import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import br.com.escala24.dto.MonthlyScheduleGenerationResponse;
 import br.com.escala24.dto.DutyAssignmentResponse;
 import br.com.escala24.entity.DayType;
-import br.com.escala24.entity.ScheduleStatus;
-import br.com.escala24.exception.UnpublishedScheduleExportException;
 
 @Service
 public class MonthlySchedulePdfService {
@@ -33,35 +34,43 @@ public class MonthlySchedulePdfService {
     private static final DateTimeFormatter DUTY_TIME_FORMAT =
             DateTimeFormatter.ofPattern("dd/MM HH:mm");
 
-    private final MonthlyScheduleManagementService managementService;
+    private final MonthlyScheduleExportDataService exportDataService;
     private final TemplateEngine templateEngine;
     private final Clock clock;
 
     @Autowired
     public MonthlySchedulePdfService(
-            MonthlyScheduleManagementService managementService,
+            MonthlyScheduleExportDataService exportDataService,
             TemplateEngine templateEngine
     ) {
-        this(managementService, templateEngine, Clock.systemDefaultZone());
+        this(exportDataService, templateEngine, Clock.systemDefaultZone());
     }
 
     MonthlySchedulePdfService(
-            MonthlyScheduleManagementService managementService,
+            MonthlyScheduleExportDataService exportDataService,
             TemplateEngine templateEngine,
             Clock clock
     ) {
-        this.managementService = managementService;
+        this.exportDataService = exportDataService;
         this.templateEngine = templateEngine;
         this.clock = clock;
     }
 
     public byte[] exportPublishedSchedule(int year, int month) {
-        MonthlyScheduleGenerationResponse schedule =
-                managementService.findByYearAndMonth(year, month);
+        return exportPublishedSchedule(
+                year,
+                month,
+                MonthlySchedulePdfLayout.LIST
+        );
+    }
 
-        if (schedule.status() != ScheduleStatus.PUBLISHED) {
-            throw new UnpublishedScheduleExportException(year, month);
-        }
+    public byte[] exportPublishedSchedule(
+            int year,
+            int month,
+            MonthlySchedulePdfLayout layout
+    ) {
+        MonthlyScheduleGenerationResponse schedule =
+                exportDataService.findPublished(year, month);
 
         Context context = new Context(BRAZIL);
         context.setVariable("schedule", schedule);
@@ -77,9 +86,12 @@ public class MonthlySchedulePdfService {
                 "generatedAt",
                 LocalDateTime.now(clock).format(GENERATED_AT_FORMAT)
         );
+        context.setVariable("weeks", toCalendarWeeks(schedule));
 
         String html = templateEngine.process(
-                "pdf/monthly-schedule",
+                layout == MonthlySchedulePdfLayout.CALENDAR
+                        ? "pdf/monthly-schedule-calendar"
+                        : "pdf/monthly-schedule",
                 context
         );
 
@@ -95,6 +107,57 @@ public class MonthlySchedulePdfService {
                     exception
             );
         }
+    }
+
+    private List<List<CalendarDay>> toCalendarWeeks(
+            MonthlyScheduleGenerationResponse schedule
+    ) {
+        YearMonth yearMonth = YearMonth.of(
+                schedule.year(),
+                schedule.month()
+        );
+        LocalDate firstCell = yearMonth.atDay(1).minusDays(
+                yearMonth.atDay(1).getDayOfWeek().getValue() % 7
+        );
+        int leadingDays = yearMonth.atDay(1)
+                .getDayOfWeek()
+                .getValue() % 7;
+        int weekCount = (int) Math.ceil(
+                (leadingDays + yearMonth.lengthOfMonth()) / 7.0
+        );
+
+        return java.util.stream.IntStream.range(0, weekCount)
+                .mapToObj(week -> java.util.stream.IntStream.range(0, 7)
+                        .mapToObj(day -> firstCell.plusDays(week * 7L + day))
+                        .map(date -> toCalendarDay(
+                                date,
+                                yearMonth,
+                                schedule.assignments()
+                        ))
+                        .toList())
+                .toList();
+    }
+
+    private CalendarDay toCalendarDay(
+            LocalDate date,
+            YearMonth yearMonth,
+            List<DutyAssignmentResponse> assignments
+    ) {
+        DutyAssignmentResponse assignment = assignments.stream()
+                .filter(item -> item.dutyDate().equals(date))
+                .findFirst()
+                .orElse(null);
+
+        return new CalendarDay(
+                date.getDayOfMonth(),
+                !YearMonth.from(date).equals(yearMonth),
+                date.getDayOfWeek() == DayOfWeek.SATURDAY
+                        || date.getDayOfWeek() == DayOfWeek.SUNDAY,
+                assignment == null ? null : assignment.firefighterName(),
+                assignment == null
+                        ? null
+                        : assignment.firefighterRegistration()
+        );
     }
 
     private List<PdfAssignmentRow> toPdfRows(
@@ -123,6 +186,15 @@ public class MonthlySchedulePdfService {
             String firefighterRegistration,
             String startDateTime,
             String endDateTime
+    ) {
+    }
+
+    private record CalendarDay(
+            int dayNumber,
+            boolean outsideMonth,
+            boolean weekend,
+            String firefighterName,
+            String firefighterRegistration
     ) {
     }
 }

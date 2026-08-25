@@ -43,15 +43,15 @@ import br.com.escala24.exception.UnpublishedScheduleExportException;
 class MonthlySchedulePdfServiceTest {
 
     @Mock
-    private MonthlyScheduleManagementService managementService;
+    private MonthlyScheduleExportDataService exportDataService;
 
     @Mock
     private TemplateEngine templateEngine;
 
     @Test
     void shouldRejectDraftScheduleExport() {
-        when(managementService.findByYearAndMonth(2027, 8))
-                .thenReturn(schedule(ScheduleStatus.DRAFT));
+        when(exportDataService.findPublished(2027, 8))
+                .thenThrow(new UnpublishedScheduleExportException(2027, 8));
 
         MonthlySchedulePdfService service = createService();
 
@@ -64,7 +64,7 @@ class MonthlySchedulePdfServiceTest {
 
     @Test
     void shouldGeneratePdfForPublishedSchedule() {
-        when(managementService.findByYearAndMonth(2027, 8))
+        when(exportDataService.findPublished(2027, 8))
                 .thenReturn(schedule(ScheduleStatus.PUBLISHED));
         when(templateEngine.process(
                 eq("pdf/monthly-schedule"),
@@ -90,11 +90,11 @@ class MonthlySchedulePdfServiceTest {
     void shouldRenderCompleteMonthlyScheduleTemplate() throws Exception {
         MonthlyScheduleGenerationResponse completeSchedule =
                 completeSchedule();
-        when(managementService.findByYearAndMonth(2027, 8))
+        when(exportDataService.findPublished(2027, 8))
                 .thenReturn(completeSchedule);
 
         byte[] pdf = new MonthlySchedulePdfService(
-                managementService,
+                exportDataService,
                 realTemplateEngine(),
                 fixedClock()
         ).exportPublishedSchedule(2027, 8);
@@ -132,9 +132,49 @@ class MonthlySchedulePdfServiceTest {
         }
     }
 
+    @Test
+    void shouldRenderCalendarLayoutOnOneLandscapePage() throws Exception {
+        when(exportDataService.findPublished(2027, 8))
+                .thenReturn(completeSchedule());
+
+        byte[] pdf = new MonthlySchedulePdfService(
+                exportDataService,
+                realTemplateEngine(),
+                fixedClock()
+        ).exportPublishedSchedule(
+                2027,
+                8,
+                MonthlySchedulePdfLayout.CALENDAR
+        );
+
+        Path outputDirectory = Path.of("target", "pdf-qa", "calendar");
+        Files.createDirectories(outputDirectory);
+        Files.write(
+                outputDirectory.resolve("escala-2027-08-calendar.pdf"),
+                pdf
+        );
+
+        try (var document = Loader.loadPDF(pdf)) {
+            String text = new PDFTextStripper().getText(document);
+            ImageIO.write(
+                    new PDFRenderer(document).renderImageWithDPI(0, 140),
+                    "png",
+                    outputDirectory.resolve("page-1.png").toFile()
+            );
+
+            assertThat(document.getNumberOfPages()).isEqualTo(1);
+            assertThat(document.getPage(0).getMediaBox().getWidth())
+                    .isGreaterThan(document.getPage(0).getMediaBox().getHeight());
+            assertThat(text)
+                    .contains("Domingo")
+                    .contains("Bombeiro Operacional 31")
+                    .contains("REG-031");
+        }
+    }
+
     private MonthlySchedulePdfService createService() {
         return new MonthlySchedulePdfService(
-                managementService,
+                exportDataService,
                 templateEngine,
                 fixedClock()
         );

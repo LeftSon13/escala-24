@@ -37,6 +37,8 @@ import br.com.escala24.service.DutyReassignmentService;
 import br.com.escala24.service.MonthlyScheduleGenerationService;
 import br.com.escala24.service.MonthlyScheduleManagementService;
 import br.com.escala24.service.MonthlySchedulePdfService;
+import br.com.escala24.service.MonthlySchedulePdfLayout;
+import br.com.escala24.service.MonthlyScheduleSpreadsheetService;
 
 @WebMvcTest(MonthlyScheduleController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -57,6 +59,9 @@ class MonthlyScheduleControllerTest {
 
     @MockitoBean
     private MonthlySchedulePdfService pdfService;
+
+    @MockitoBean
+    private MonthlyScheduleSpreadsheetService spreadsheetService;
 
     @Test
     void shouldGenerateMonthlySchedule() throws Exception {
@@ -147,7 +152,10 @@ class MonthlyScheduleControllerTest {
     void shouldExportPublishedScheduleAsPdf() throws Exception {
         byte[] pdf = "%PDF-1.7".getBytes();
 
-        when(pdfService.exportPublishedSchedule(2027, 8))
+        when(pdfService.exportPublishedSchedule(
+                2027,
+                8,
+                MonthlySchedulePdfLayout.LIST))
                 .thenReturn(pdf);
 
         mockMvc.perform(
@@ -159,10 +167,50 @@ class MonthlyScheduleControllerTest {
                 .andExpect(
                         header().string(
                                 "Content-Disposition",
-                                "attachment; filename=\"escala-2027-08.pdf\""))
+                                "attachment; filename=\"escala-2027-08-list.pdf\""))
                 .andExpect(content().bytes(pdf));
 
-        verify(pdfService).exportPublishedSchedule(2027, 8);
+        verify(pdfService).exportPublishedSchedule(
+                2027,
+                8,
+                MonthlySchedulePdfLayout.LIST);
+    }
+
+    @Test
+    void shouldExportCalendarPdf() throws Exception {
+        byte[] pdf = "%PDF-1.7".getBytes();
+
+        when(pdfService.exportPublishedSchedule(
+                2027,
+                8,
+                MonthlySchedulePdfLayout.CALENDAR))
+                .thenReturn(pdf);
+
+        mockMvc.perform(get(
+                "/api/monthly-schedules/2027/8/pdf?layout=calendar"))
+                .andExpect(status().isOk())
+                .andExpect(header().string(
+                        "Content-Disposition",
+                        "attachment; filename=\"escala-2027-08-calendar.pdf\""))
+                .andExpect(content().bytes(pdf));
+    }
+
+    @Test
+    void shouldExportPublishedScheduleAsSpreadsheet() throws Exception {
+        byte[] spreadsheet = "xlsx".getBytes();
+        when(spreadsheetService.exportPublishedSchedule(2027, 8))
+                .thenReturn(spreadsheet);
+
+        mockMvc.perform(get("/api/monthly-schedules/2027/8/xlsx"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .andExpect(header().string(
+                        "Content-Disposition",
+                        "attachment; filename=\"escala-2027-08.xlsx\""))
+                .andExpect(content().bytes(spreadsheet));
+
+        verify(spreadsheetService).exportPublishedSchedule(2027, 8);
     }
 
     @Test

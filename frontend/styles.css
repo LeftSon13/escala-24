@@ -1200,8 +1200,51 @@ button {
 
 .toolbar .primary-button {
     width: auto;
-    height: 40px;
+    height: 42px;
     margin: 0;
+}
+
+.toolbar button,
+.toolbar input,
+.toolbar select {
+    min-height: 42px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 650;
+    line-height: 1;
+}
+
+.toolbar .primary-button,
+.toolbar .secondary-button,
+.toolbar .success-button {
+    height: 42px;
+    padding: 0 18px;
+    border: 1px solid transparent;
+    box-shadow: none;
+    white-space: nowrap;
+}
+
+#generate-schedule-button {
+    min-width: 142px;
+}
+
+.toolbar .primary-button:hover,
+.toolbar .secondary-button:hover,
+.toolbar .success-button:hover {
+    transform: none;
+}
+
+.toolbar .secondary-button {
+    color: var(--slate-700);
+    background: var(--white);
+    border-color: var(--slate-200);
+}
+
+.toolbar .secondary-button:hover {
+    color: var(--navy-950);
+    background: var(--slate-50);
+    border-color: #c5d0de;
 }
 
 .field-group {
@@ -1251,6 +1294,93 @@ button {
 .compact-field {
     width: 140px;
     margin: 0;
+}
+
+.export-actions {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.export-control {
+    display: flex;
+    width: 205px;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.export-control label {
+    color: var(--slate-700);
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.export-select-wrap {
+    position: relative;
+}
+
+.export-select-wrap::after {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid var(--blue-600);
+    border-bottom: 2px solid var(--blue-600);
+    content: "";
+    pointer-events: none;
+    transform: translateY(-70%) rotate(45deg);
+}
+
+.export-select-wrap select {
+    width: 100%;
+    height: 42px;
+    padding: 0 38px 0 14px;
+    color: var(--navy-950);
+    background: #f4f8ff;
+    border: 1px solid #c9daf2;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 650;
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.export-select-wrap select:hover {
+    background: #eef5ff;
+    border-color: #9dbce6;
+}
+
+.export-select-wrap select:focus-visible {
+    background: var(--white);
+    border-color: var(--blue-500);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.export-button {
+    gap: 8px;
+    color: var(--blue-600);
+    background: #f4f8ff;
+    border-color: #b7cef0;
+}
+
+.export-button svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.export-button:hover {
+    color: var(--white);
+    background: var(--blue-600);
+    border-color: var(--blue-600);
+    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
 }
 
 .grow-field {
@@ -1706,9 +1836,16 @@ button {
     }
 
     .compact-field,
-    .grow-field {
+    .grow-field,
+    .export-actions,
+    .export-control {
         width: 100%;
         max-width: none;
+    }
+
+    .export-actions {
+        align-items: stretch;
+        flex-direction: column;
     }
 
     .toolbar .primary-button,

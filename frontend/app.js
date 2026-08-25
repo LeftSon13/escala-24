@@ -195,13 +195,13 @@ scheduleMonth.innerHTML = monthNames.map((name, index) => `<option value="${inde
 async function loadSchedule() {
     const feedback = $("#schedule-feedback"); feedback.textContent = "Carregando escala..."; feedback.classList.remove("hidden"); $("#schedule-table").classList.add("hidden");
     try { state.schedule = await apiRequest(`/api/monthly-schedules/${Number(scheduleYear.value)}/${Number(scheduleMonth.value)}`); renderSchedule(); }
-    catch (error) { state.schedule = null; feedback.textContent = error.status === 404 ? "Nenhuma escala encontrada para este período." : error.message; $("#schedule-summary").classList.add("hidden"); $("#publish-schedule-button").classList.add("hidden"); $("#export-schedule-button").classList.add("hidden"); }
+    catch (error) { state.schedule = null; feedback.textContent = error.status === 404 ? "Nenhuma escala encontrada para este período." : error.message; $("#schedule-summary").classList.add("hidden"); $("#publish-schedule-button").classList.add("hidden"); $("#export-schedule-control").classList.add("hidden"); }
 }
 function renderSchedule() {
     const item = state.schedule;
     $("#schedule-summary").innerHTML = `<strong>${monthNames[item.month - 1]} de ${item.year}</strong><span class="status ${item.status === "PUBLISHED" ? "approved" : "pending"}">${labels.statuses[item.status]}</span><small>Criada em ${formatDateTime(item.createdAt)}</small>`;
     $("#schedule-summary").classList.remove("hidden"); $("#publish-schedule-button").classList.toggle("hidden", state.user.role !== "ADMIN" || item.status !== "DRAFT");
-    $("#export-schedule-button").classList.toggle("hidden", item.status !== "PUBLISHED");
+    $("#export-schedule-control").classList.toggle("hidden", item.status !== "PUBLISHED");
     $("#schedule-assignment-list").innerHTML = item.assignments.map((duty) => `<div class="data-row schedule-row"><span>${formatDate(duty.dutyDate)}</span><span>${labels.dayTypes[duty.dayType]}</span><span><strong>${escapeHtml(duty.firefighterName)}</strong><small>${escapeHtml(duty.firefighterRegistration)}</small></span><span>${formatDateTime(duty.startDateTime)}<br>${formatDateTime(duty.endDateTime)}</span><span>${state.user.role === "ADMIN" && item.status === "DRAFT" ? `<button class="row-action" data-reassign-date="${duty.dutyDate}">Remanejar</button>` : "—"}</span></div>`).join("");
     $("#schedule-feedback").classList.add("hidden"); $("#schedule-table").classList.remove("hidden");
 }
@@ -213,8 +213,13 @@ async function exportSchedulePdf() {
 
     try {
         const { year, month } = state.schedule;
+        const format = $("#export-schedule-format").value;
+        const spreadsheet = format === "xlsx";
+        const endpoint = spreadsheet
+            ? `/api/monthly-schedules/${year}/${month}/xlsx`
+            : `/api/monthly-schedules/${year}/${month}/pdf?layout=${format}`;
         const response = await fetch(
-            `/api/monthly-schedules/${year}/${month}/pdf`,
+            endpoint,
             { credentials: "same-origin" }
         );
 
@@ -231,12 +236,14 @@ async function exportSchedulePdf() {
         const url = URL.createObjectURL(await response.blob());
         const link = document.createElement("a");
         link.href = url;
-        link.download = `escala-${year}-${String(month).padStart(2, "0")}.pdf`;
+        link.download = spreadsheet
+            ? `escala-${year}-${String(month).padStart(2, "0")}.xlsx`
+            : `escala-${year}-${String(month).padStart(2, "0")}-${format}.pdf`;
         document.body.appendChild(link);
         link.click();
         link.remove();
         URL.revokeObjectURL(url);
-        showToast("PDF exportado.");
+        showToast(spreadsheet ? "Planilha exportada." : "PDF exportado.");
     } catch (error) {
         showToast(error.message, "error");
     } finally {

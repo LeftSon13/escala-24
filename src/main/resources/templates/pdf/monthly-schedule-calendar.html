@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Escala mensal em calendário</title>
+    <style>
+        @page { size: A4 landscape; margin: 12mm; }
+        body { color: #172033; font-family: Arial, sans-serif; font-size: 10px; }
+        h1 { color: #0f2747; font-size: 21px; margin: 0 0 3px; }
+        .subtitle { color: #52637a; font-size: 12px; margin: 0 0 10px; }
+        .metadata { background: #eef4fa; border-left: 4px solid #2563a6; margin-bottom: 10px; padding: 7px 10px; }
+        .metadata span { display: inline-block; margin-right: 24px; }
+        table { border-collapse: collapse; table-layout: fixed; width: 100%; }
+        th { background: #173b67; color: #fff; padding: 6px; text-align: center; }
+        td { border: 1px solid #bfcbd9; height: 22mm; padding: 5px; vertical-align: top; }
+        td.weekend { background: #f2f6fa; }
+        td.outside { background: #f8f9fb; color: #a5afbd; }
+        .day-number { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; }
+        .firefighter { color: #173b67; display: block; font-weight: bold; word-wrap: break-word; }
+        .registration { color: #607086; display: block; font-size: 8px; margin-top: 2px; }
+    </style>
+</head>
+<body>
+    <h1>Escala mensal de plantões</h1>
+    <p class="subtitle" th:text="|${#strings.capitalize(monthName)} de ${schedule.year}|">Mês e ano</p>
+    <div class="metadata">
+        <span><strong>Status:</strong> Publicada</span>
+        <span><strong>Documento gerado em:</strong> <span th:text="${generatedAt}">data</span></span>
+    </div>
+    <table>
+        <thead>
+            <tr><th>Domingo</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th><th>Sábado</th></tr>
+        </thead>
+        <tbody>
+            <tr th:each="week : ${weeks}">
+                <td th:each="day : ${week}"
+                    th:classappend="|${day.weekend ? 'weekend' : ''} ${day.outsideMonth ? 'outside' : ''}|">
+                    <span class="day-number" th:text="${day.dayNumber}">1</span>
+                    <span th:if="${!day.outsideMonth and day.firefighterName != null}">
+                        <span class="firefighter" th:text="${day.firefighterName}">Nome</span>
+                        <span class="registration" th:text="${day.firefighterRegistration}">Matrícula</span>
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

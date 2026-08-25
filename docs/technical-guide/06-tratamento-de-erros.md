@@ -147,6 +147,11 @@ Esse status não significa que todos os erros de domínio do sistema tenham sido
 exaustivamente testados em um único lugar. Ele descreve o mapeamento atual do
 handler; a cobertura efetiva depende dos testes de cada controller e service.
 
+O uso de `422` aqui é uma decisão do projeto para representar determinadas
+regras de negócio violadas. O código HTTP, sozinho, não define a regra do
+domínio; ele apenas comunica ao cliente como o backend classificou aquela
+falha.
+
 ## 5. Conflitos: `409 Conflict`
 
 ### Conceito
@@ -245,10 +250,11 @@ explícito para toda exceção inesperada, como `Exception.class`. Portanto, est
 capítulo não afirma que qualquer falha desconhecida terá necessariamente o
 mesmo `ApiErrorResponse`.
 
-Também não há, neste capítulo, uma política completa para erros de banco,
-timeouts, indisponibilidade do PostgreSQL ou observabilidade. Essas situações
-podem receber tratamento padrão do Spring Boot ou depender da infraestrutura;
-não foram inventariadas como uma categoria implementada pelo Escala 24.
+Não foi identificada, no tratamento explícito analisado para este capítulo,
+uma política própria para erros de banco, timeouts, indisponibilidade do
+PostgreSQL ou observabilidade. Essas situações podem receber tratamento padrão
+do Spring Boot ou depender da infraestrutura; não foram inventariadas como uma
+categoria implementada pelo Escala 24.
 
 ## 10. Consequências e alternativas
 
@@ -297,6 +303,8 @@ regra da decisão de transporte.
    `AccessDeniedException`?
 5. O que os testes atuais verificam sobre `fieldErrors`?
 6. O que ainda não pode ser afirmado sobre exceções inesperadas?
+7. Por que o projeto separa a exceção de domínio da decisão sobre qual status
+   HTTP devolver?
 
 ## Resumo
 
@@ -308,6 +316,8 @@ autorização usam handlers próprios e resultam em `401` ou `403`.
 
 Essas conclusões distinguem o que está implementado no código, o que é
 verificado por testes específicos e o que é comportamento fornecido pelo
-framework. O próximo aprofundamento deve partir do roteiro real do projeto,
-que não está disponível no working tree porque o arquivo de contexto solicitado
-não foi encontrado.
+framework.
+
+Uma frase útil para lembrar é:
+
+> **A exceção explica o que falhou; o tratamento de erros transforma essa falha em uma resposta HTTP previsível para quem consome a API.**

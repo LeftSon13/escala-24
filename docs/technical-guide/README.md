@@ -110,17 +110,13 @@ Os arquivos atualmente existentes nesta pasta são:
 | ✅ Concluído | [03 — Domínio e regras](./03-dominio-e-regras.md) |
 | ✅ Concluído | [04 — Backend em camadas](./04-backend-em-camadas.md) |
 | ✅ Concluído | [05 — Fluxo completo de uma requisição](./05-fluxo-completo-de-uma-requisicao.md) |
-| 🟡 Em elaboração | [06 — Tratamento de erros](./06-tratamento-de-erros.md) |
+| ✅ Concluído | [06 — Tratamento de erros](./06-tratamento-de-erros.md) |
+| ⬜ Planejado | 07 — Segurança |
 
-O capítulo 06 está em elaboração e não deve ser tratado como capítulo
-concluído.
 
 Os capítulos anteriores encaminham autenticação, autorização, sessão e CSRF
-para um capítulo próprio. Assim, o capítulo 07 deverá aprofundar Segurança.
-Não há evidência suficiente nos arquivos atuais para reconstruir com segurança
-uma sequência completa de capítulos posteriores; por isso, este índice mantém
-apenas os capítulos existentes, o capítulo em elaboração e o próximo capítulo
-explicitamente indicado.
+para um capítulo próprio. Assim, o capítulo 07 aprofundará Segurança. Os
+capítulos posteriores ao 07 serão definidos conforme a evolução do guia e a análise do código atual.
 
 Legenda:
 

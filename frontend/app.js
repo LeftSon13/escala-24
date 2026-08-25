@@ -193,20 +193,21 @@ async function createUnavailability(event) {
 const scheduleMonth = $("#schedule-month"), scheduleYear = $("#schedule-year");
 scheduleMonth.innerHTML = monthNames.map((name, index) => `<option value="${index + 1}">${name}</option>`).join("");
 async function loadSchedule() {
-    const feedback = $("#schedule-feedback"); feedback.textContent = "Carregando escala..."; feedback.classList.remove("hidden"); $("#schedule-table").classList.add("hidden");
+    const feedback = $("#schedule-feedback"), button = $("#load-schedule-button"); setLoading(button, true, "Consultando..."); feedback.textContent = "Carregando escala..."; feedback.classList.remove("hidden"); $("#schedule-table").classList.add("hidden");
     try { state.schedule = await apiRequest(`/api/monthly-schedules/${Number(scheduleYear.value)}/${Number(scheduleMonth.value)}`); renderSchedule(); }
-    catch (error) { state.schedule = null; feedback.textContent = error.status === 404 ? "Nenhuma escala encontrada para este período." : error.message; $("#schedule-summary").classList.add("hidden"); $("#publish-schedule-button").classList.add("hidden"); $("#export-schedule-control").classList.add("hidden"); }
+    catch (error) { state.schedule = null; feedback.textContent = error.status === 404 ? "Nenhuma escala encontrada para este período." : error.message; $("#schedule-summary").classList.add("hidden"); $("#generate-schedule-button").classList.toggle("hidden", state.user.role !== "ADMIN" || error.status !== 404); $("#publish-schedule-button").classList.add("hidden"); $("#export-schedule-control").classList.add("hidden"); }
+    finally { setLoading(button, false); }
 }
 function renderSchedule() {
     const item = state.schedule;
     $("#schedule-summary").innerHTML = `<strong>${monthNames[item.month - 1]} de ${item.year}</strong><span class="status ${item.status === "PUBLISHED" ? "approved" : "pending"}">${labels.statuses[item.status]}</span><small>Criada em ${formatDateTime(item.createdAt)}</small>`;
-    $("#schedule-summary").classList.remove("hidden"); $("#publish-schedule-button").classList.toggle("hidden", state.user.role !== "ADMIN" || item.status !== "DRAFT");
+    $("#schedule-summary").classList.remove("hidden"); $("#generate-schedule-button").classList.add("hidden"); $("#publish-schedule-button").classList.toggle("hidden", state.user.role !== "ADMIN" || item.status !== "DRAFT");
     $("#export-schedule-control").classList.toggle("hidden", item.status !== "PUBLISHED");
     $("#schedule-assignment-list").innerHTML = item.assignments.map((duty) => `<div class="data-row schedule-row"><span>${formatDate(duty.dutyDate)}</span><span>${labels.dayTypes[duty.dayType]}</span><span><strong>${escapeHtml(duty.firefighterName)}</strong><small>${escapeHtml(duty.firefighterRegistration)}</small></span><span>${formatDateTime(duty.startDateTime)}<br>${formatDateTime(duty.endDateTime)}</span><span>${state.user.role === "ADMIN" && item.status === "DRAFT" ? `<button class="row-action" data-reassign-date="${duty.dutyDate}">Remanejar</button>` : "—"}</span></div>`).join("");
     $("#schedule-feedback").classList.add("hidden"); $("#schedule-table").classList.remove("hidden");
 }
 async function generateSchedule() { const button = $("#generate-schedule-button"); setLoading(button, true, "Gerando..."); try { state.schedule = await apiRequest("/api/monthly-schedules", { method: "POST", body: JSON.stringify({ year: Number(scheduleYear.value), month: Number(scheduleMonth.value) }) }); renderSchedule(); showToast("Escala gerada."); } catch (error) { showToast(error.message, "error"); } finally { setLoading(button, false); } }
-async function publishSchedule() { try { state.schedule = await apiRequest(`/api/monthly-schedules/${state.schedule.year}/${state.schedule.month}/publication`, { method: "POST" }); renderSchedule(); showToast("Escala publicada."); } catch (error) { showToast(error.message, "error"); } }
+async function publishSchedule() { const button = $("#publish-schedule-button"); setLoading(button, true, "Publicando..."); try { state.schedule = await apiRequest(`/api/monthly-schedules/${state.schedule.year}/${state.schedule.month}/publication`, { method: "POST" }); renderSchedule(); showToast("Escala publicada."); } catch (error) { showToast(error.message, "error"); } finally { setLoading(button, false); } }
 async function exportSchedulePdf() {
     const button = $("#export-schedule-button");
     setLoading(button, true, "Exportando...");

@@ -12,6 +12,8 @@ e o projeto utiliza [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 - configuração inicial do cliente desktop passa a utilizar a mesma versão do instalador ao selecionar as imagens do backend e frontend.
 
+- formulários modais passam a aceitar o envio pela tecla `Enter`, mantendo os botões de cancelamento apenas para fechar a janela.
+
 ## [1.1.0] - 2026-08-24
 
 ### Adicionado

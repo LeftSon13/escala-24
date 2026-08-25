@@ -221,6 +221,15 @@ async function loadDashboardSchedule() {
 async function loadDashboardAdmin() { const [firefighters, pending] = await Promise.all([apiRequest("/api/firefighters"), apiRequest("/api/unavailabilities/pending")]); state.firefighters = firefighters; state.unavailabilities = pending; setText("#active-firefighters-metric", firefighters.filter((item) => item.active).length); setText("#pending-unavailabilities-metric", pending.length); setText("#welcome-summary", pending.length ? `Há ${pending.length} solicitações aguardando sua análise.` : "Não há solicitações pendentes no momento."); setText("#dashboard-unavailability-title", "Indisponibilidades pendentes"); const badge = $("#pending-nav-badge"); badge.textContent = pending.length; badge.classList.toggle("hidden", !pending.length); renderDashboardRequests(pending.slice(0, 3)); }
 async function loadDashboardFirefighter() { const mine = await apiRequest("/api/unavailabilities/me"); state.unavailabilities = mine; const pending = mine.filter((item) => item.status === "PENDING"); setText("#pending-unavailabilities-metric", pending.length); setText("#welcome-summary", pending.length ? `Você possui ${pending.length} solicitações aguardando análise.` : "Suas solicitações estão em dia."); setText("#dashboard-unavailability-title", "Minhas indisponibilidades"); renderDashboardRequests(mine.slice(0, 3)); }
 function setText(selector, value) { const item = $(selector); if (item) item.textContent = value; }
+function renderCurrentDate() {
+    const currentDate = new Intl.DateTimeFormat("pt-BR", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long"
+    }).format(new Date());
+
+    setText("#dashboard-current-date", currentDate);
+}
 function renderDashboardRequests(items) { const container = $("#dashboard-unavailability-list"); if (!container) return; const heading = $(".request-heading", container)?.outerHTML ?? ""; container.innerHTML = heading + (items.length ? items.map((item) => `<div class="request-row"><span>${escapeHtml(item.firefighterName)}</span><span>${labels.types[item.type]}</span><span>${formatDate(item.startDate)} a ${formatDate(item.endDate)}</span><span><i class="status ${item.status.toLowerCase()}">${labels.statuses[item.status]}</i></span><span><button class="row-action" data-page="unavailabilities">Ver</button></span></div>`).join("") : `<div class="empty-inline">Nenhuma solicitação para exibir.</div>`); $$("[data-page]", container).forEach((button) => button.addEventListener("click", () => navigateTo(button.dataset.page))); }
 function renderCalendar(assignments, year, month) { setText("#dashboard-calendar-title", `${monthNames[month - 1]} de ${year}`); const map = new Map(assignments.map((item) => [item.dutyDate, item])); const offset = new Date(year, month - 1, 1).getDay(), total = new Date(year, month, 0).getDate(), cells = Array(offset).fill(null).concat(Array.from({ length: total }, (_, index) => index + 1)); while (cells.length % 7) cells.push(null); $("#calendar-grid").innerHTML = cells.map((day, index) => { if (!day) return `<div class="calendar-day muted"></div>`; const key = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`, duty = map.get(key); return `<div class="calendar-day ${index % 7 === 0 || index % 7 === 6 ? "weekend" : ""}"><span class="day-number">${day}</span>${duty ? `<span class="day-duty">${escapeHtml(duty.firefighterName)}</span>` : ""}</div>`; }).join(""); }
 function renderDutyList(assignments) { $("#duty-list").innerHTML = assignments.slice(0, 5).map((item) => `<article class="duty-item"><div class="duty-date"><strong>${item.dutyDate.substring(8)}</strong><span>${item.dutyDate.substring(5, 7)}</span></div><div class="duty-copy"><strong>${escapeHtml(item.firefighterName)}</strong><span>${escapeHtml(item.firefighterRegistration)}</span></div><span class="duty-type">24H</span></article>`).join("") || `<div class="empty-inline">Nenhuma escala neste mês.</div>`; }
@@ -234,7 +243,10 @@ $("#login-form").addEventListener("submit", async (event) => { event.preventDefa
 $("#password-toggle").addEventListener("click", () => $("#password").type = $("#password").type === "password" ? "text" : "password");
 $("#logout-button").addEventListener("click", async () => { try { await apiRequest("/api/auth/logout", { method: "POST" }); closeDashboard(); } catch (error) { showToast(error.message, "error"); } });
 $$("[data-page]").forEach((button) => button.addEventListener("click", () => navigateTo(button.dataset.page)));
-$$('.app-dialog button[value="cancel"]').forEach((button) => button.addEventListener("click", (event) => { event.preventDefault(); button.closest("dialog").close("cancel"); }));
+$$('.app-dialog button[value="cancel"]').forEach((button) => {
+    button.type = "button";
+    button.addEventListener("click", () => button.closest("dialog").close("cancel"));
+});
 $("#load-holidays-button").addEventListener("click", loadHolidays); $("#new-holiday-button").addEventListener("click", () => openHoliday()); $("#holiday-form").addEventListener("submit", saveHoliday);
 $("#holiday-list").addEventListener("click", async (event) => { const edit = event.target.dataset.holidayEdit, remove = event.target.dataset.holidayDelete; if (edit) openHoliday(state.holidays.find((item) => item.id === Number(edit))); if (remove && await confirmAction("Excluir feriado", "O feriado será removido permanentemente.")) { try { await apiRequest(`/api/holidays/${remove}`, { method: "DELETE" }); await loadHolidays(); showToast("Feriado excluído."); } catch (error) { showToast(error.message, "error"); } } });
 $("#new-firefighter-button").addEventListener("click", () => { $("#firefighter-form").reset(); clearErrors($("#firefighter-form")); $("#firefighter-dialog").showModal(); }); $("#load-firefighters-button").addEventListener("click", loadFirefighters); $("#firefighter-search").addEventListener("input", renderFirefighters); $("#firefighter-form").addEventListener("submit", registerFirefighter);
@@ -248,4 +260,5 @@ $("#dashboard-next-month").addEventListener("click", () => shiftDashboardMonth(1
 $("#dashboard-current-month").addEventListener("click", () => { const today = new Date(); scheduleYear.value = today.getFullYear(); scheduleMonth.value = today.getMonth() + 1; loadDashboardSchedule(); });
 
 const now = new Date(); $("#holiday-year").value = now.getFullYear(); scheduleYear.value = now.getFullYear(); scheduleMonth.value = now.getMonth() + 1;
+renderCurrentDate();
 restoreSession();

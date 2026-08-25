@@ -1,6 +1,7 @@
 # Escala 24
 
 [![Backend CI](https://github.com/LeftSon13/escala-24/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/LeftSon13/escala-24/actions/workflows/backend-ci.yml)
+[![Frontend CI](https://github.com/LeftSon13/escala-24/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/LeftSon13/escala-24/actions/workflows/frontend-ci.yml)
 [![Secret Scan](https://github.com/LeftSon13/escala-24/actions/workflows/secret-scan.yml/badge.svg)](https://github.com/LeftSon13/escala-24/actions/workflows/secret-scan.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -293,7 +294,7 @@ A pipeline configura o Java 21, executa `mvn verify`, inicia o PostgreSQL tempor
 
 ## Cliente desktop
 
-O Escala 24 possui uma prova de conceito para Windows construída com Electron. Ela oferece uma janela nativa, detecção de indisponibilidade do servidor e geração de instalador `.exe`.
+O Escala 24 possui um cliente para Windows construído com Electron e distribuído por meio de um instalador `.exe`. Ele orienta a primeira configuração, inicia os serviços locais com Docker Compose, detecta indisponibilidades e preserva os dados entre reinicializações.
 
 Consulte o [guia do cliente desktop](docs/desktop-client.md) para entender a arquitetura, instalação, geração do instalador, limitações e possíveis evoluções.
 
@@ -302,6 +303,7 @@ Consulte o [guia do cliente desktop](docs/desktop-client.md) para entender a arq
 ```text
 escala-24/
 ├── .github/workflows/       # Pipeline de integração contínua
+├── desktop/                 # Cliente Electron e pacote de implantação
 ├── frontend/                # Interface web e configuração do Nginx
 ├── src/main/java/           # Código principal do backend
 ├── src/main/resources/      # Configurações e migrações do Flyway

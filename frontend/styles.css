@@ -473,7 +473,6 @@ button {
 
 .main-content {
     min-width: 0;
-    margin-left: 245px;
     grid-column: 2;
 }
 
@@ -675,6 +674,10 @@ button {
     gap: 18px;
 }
 
+.dashboard-grid > * {
+    min-width: 0;
+}
+
 .panel {
     background: var(--white);
     border: 1px solid var(--slate-200);
@@ -723,7 +726,7 @@ button {
 .calendar-weekdays,
 .calendar-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
 .calendar-weekdays {
@@ -744,6 +747,7 @@ button {
 .calendar-day {
     position: relative;
     display: flex;
+    min-width: 0;
     min-height: 64px;
     padding: 9px;
     border-right: 1px solid var(--slate-100);
@@ -1559,7 +1563,7 @@ button {
 
 /* Responsividade */
 
-@media (max-width: 1100px) {
+@media (max-width: 1280px) {
     .metrics-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -1614,10 +1618,6 @@ button {
 
     .sidebar-profile {
         justify-content: center;
-    }
-
-    .main-content {
-        margin-left: 76px;
     }
 
     .topbar,

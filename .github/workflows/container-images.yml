@@ -1,0 +1,64 @@
+name: Container Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version used in the image tag
+        required: true
+        default: "1.1.1"
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    name: Publish ${{ matrix.name }} image
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - name: backend
+            context: .
+            image: ghcr.io/leftson13/escala-24-backend
+
+          - name: frontend
+            context: ./frontend
+            image: ghcr.io/leftson13/escala-24-frontend
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Prepare image version
+        id: version
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${GITHUB_REF_NAME#v}"
+          fi
+
+          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and publish image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          push: true
+          tags: |
+            ${{ matrix.image }}:${{ steps.version.outputs.value }}
+            ${{ matrix.image }}:latest

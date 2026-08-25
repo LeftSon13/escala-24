@@ -163,7 +163,7 @@ function createEnvironmentFile(configuration) {
   const databasePassword = crypto.randomBytes(32).toString("hex");
 
   const environmentVariables = [
-    "ESCALA24_VERSION=1.0.0",
+    `ESCALA24_VERSION=${app.getVersion()}`,
     "POSTGRES_DB=escala24",
     "POSTGRES_USER=escala24_user",
     `POSTGRES_PASSWORD=${databasePassword}`,

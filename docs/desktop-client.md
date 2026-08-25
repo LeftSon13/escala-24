@@ -6,7 +6,7 @@ O cliente desktop do Escala 24 é uma aplicação para Windows construída com E
 
 Ele oferece uma janela nativa para acessar a interface web do sistema, permitindo que o Escala 24 seja aberto pelo menu Iniciar ou por um atalho na área de trabalho.
 
-Nesta primeira versão, o Electron funciona como uma camada de apresentação. Os demais componentes continuam executados separadamente pelo Docker Compose:
+O Electron funciona como uma camada de apresentação e também coordena a configuração e a inicialização dos serviços locais. Os demais componentes são executados pelo Docker Compose:
 
 - frontend servido pelo Nginx;
 - backend desenvolvido com Spring Boot;
@@ -39,18 +39,23 @@ Uma analogia simples é pensar no Electron como a recepção de um prédio:
 - o backend executa as regras do sistema;
 - o PostgreSQL guarda os dados.
 
-## Objetivo da prova de conceito
+## Objetivo do cliente desktop
 
-Esta prova de conceito foi criada para validar se o Escala 24 poderia:
+O cliente desktop foi criado para oferecer uma instalação orientada do Escala 24 em computadores Windows. Ele permite:
 
 - funcionar dentro de uma janela nativa do Windows;
 - manter a autenticação e a navegação existentes;
 - detectar quando o servidor local está indisponível;
 - permitir uma nova tentativa de conexão;
 - ser distribuído por meio de um instalador `.exe`;
-- utilizar nome e ícone personalizados no Windows.
+- utilizar nome e ícone personalizados no Windows;
+- configurar o primeiro administrador;
+- gerar as configurações privadas da instalação;
+- iniciar os serviços por meio do Docker Compose;
+- baixar imagens versionadas do GitHub Container Registry;
+- preservar os dados entre reinicializações.
 
-O resultado demonstra que a aplicação web atual pode receber uma experiência desktop sem exigir a reescrita do frontend ou do backend.
+O cliente foi validado em uma máquina virtual Windows limpa, sem o código-fonte do projeto, utilizando apenas o instalador publicado, o Docker Desktop e acesso à internet na primeira execução.
 
 ## Requisitos
 
@@ -61,7 +66,7 @@ Para desenvolver e gerar o cliente desktop, são necessários:
 - Docker Desktop;
 - serviços do Escala 24 configurados pelo Docker Compose.
 
-O Electron não inicia os serviços automaticamente nesta prova de conceito. O Docker Desktop e os contêineres precisam estar em execução antes da abertura completa do sistema.
+O Docker Desktop precisa estar instalado e com o mecanismo Docker disponível. A partir disso, o Electron prepara e inicia os contêineres necessários durante a configuração inicial e nas próximas execuções.
 
 ## Estrutura do cliente
 
@@ -76,6 +81,12 @@ desktop/
 ├── offline.html
 ├── offline.js
 ├── preload.js
+├── setup.html
+├── setup.css
+├── setup.js
+├── deployment/
+│   ├── docker-compose.yml
+│   └── .env.example
 ├── package.json
 └── package-lock.json
 ```
@@ -86,6 +97,8 @@ Responsabilidade dos principais arquivos:
 - `preload.js`: disponibiliza uma comunicação controlada entre a página local e o processo principal;
 - `offline.html`: apresenta uma mensagem amigável quando o servidor não responde;
 - `offline.js`: trata o botão de nova tentativa;
+- `setup.html`, `setup.css` e `setup.js`: implementam a configuração guiada da primeira execução;
+- `deployment/`: contém os arquivos usados para iniciar os serviços instalados;
 - `package.json`: define dependências, comandos e configurações do instalador;
 - `assets/icon.ico`: fornece o ícone usado pelo aplicativo e pelo instalador;
 - `scripts/create-icon.cjs`: gera o ícone do Windows a partir da imagem de origem.
@@ -138,14 +151,14 @@ npm.cmd run dist
 O arquivo será criado em:
 
 ```text
-desktop/out/Escala 24-Setup-1.0.0.exe
+desktop/out/Escala 24-Setup-<versão>.exe
 ```
 
 A pasta `out` contém arquivos gerados automaticamente e não deve ser enviada ao Git.
 
 ## Instalação no Windows
 
-Execute o arquivo `Escala 24-Setup-1.0.0.exe` e siga as etapas apresentadas pelo instalador.
+Execute o arquivo `Escala 24-Setup-<versão>.exe` e siga as etapas apresentadas pelo instalador.
 
 Durante a instalação, é possível:
 

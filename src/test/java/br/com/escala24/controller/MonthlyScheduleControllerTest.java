@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.DateTimeException;
@@ -34,6 +36,9 @@ import br.com.escala24.exception.MonthlyScheduleNotFoundException;
 import br.com.escala24.service.DutyReassignmentService;
 import br.com.escala24.service.MonthlyScheduleGenerationService;
 import br.com.escala24.service.MonthlyScheduleManagementService;
+import br.com.escala24.service.MonthlySchedulePdfService;
+import br.com.escala24.service.MonthlySchedulePdfLayout;
+import br.com.escala24.service.MonthlyScheduleSpreadsheetService;
 
 @WebMvcTest(MonthlyScheduleController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -51,6 +56,12 @@ class MonthlyScheduleControllerTest {
 
     @MockitoBean
     private DutyReassignmentService reassignmentService;
+
+    @MockitoBean
+    private MonthlySchedulePdfService pdfService;
+
+    @MockitoBean
+    private MonthlyScheduleSpreadsheetService spreadsheetService;
 
     @Test
     void shouldGenerateMonthlySchedule() throws Exception {
@@ -135,6 +146,71 @@ class MonthlyScheduleControllerTest {
                                 .value("PUBLISHED"));
 
         verify(managementService).publish(2027, 8);
+    }
+
+    @Test
+    void shouldExportPublishedScheduleAsPdf() throws Exception {
+        byte[] pdf = "%PDF-1.7".getBytes();
+
+        when(pdfService.exportPublishedSchedule(
+                2027,
+                8,
+                MonthlySchedulePdfLayout.LIST))
+                .thenReturn(pdf);
+
+        mockMvc.perform(
+                get("/api/monthly-schedules/2027/8/pdf"))
+                .andExpect(status().isOk())
+                .andExpect(
+                        content().contentType(
+                                MediaType.APPLICATION_PDF))
+                .andExpect(
+                        header().string(
+                                "Content-Disposition",
+                                "attachment; filename=\"escala-2027-08-list.pdf\""))
+                .andExpect(content().bytes(pdf));
+
+        verify(pdfService).exportPublishedSchedule(
+                2027,
+                8,
+                MonthlySchedulePdfLayout.LIST);
+    }
+
+    @Test
+    void shouldExportCalendarPdf() throws Exception {
+        byte[] pdf = "%PDF-1.7".getBytes();
+
+        when(pdfService.exportPublishedSchedule(
+                2027,
+                8,
+                MonthlySchedulePdfLayout.CALENDAR))
+                .thenReturn(pdf);
+
+        mockMvc.perform(get(
+                "/api/monthly-schedules/2027/8/pdf?layout=calendar"))
+                .andExpect(status().isOk())
+                .andExpect(header().string(
+                        "Content-Disposition",
+                        "attachment; filename=\"escala-2027-08-calendar.pdf\""))
+                .andExpect(content().bytes(pdf));
+    }
+
+    @Test
+    void shouldExportPublishedScheduleAsSpreadsheet() throws Exception {
+        byte[] spreadsheet = "xlsx".getBytes();
+        when(spreadsheetService.exportPublishedSchedule(2027, 8))
+                .thenReturn(spreadsheet);
+
+        mockMvc.perform(get("/api/monthly-schedules/2027/8/xlsx"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .andExpect(header().string(
+                        "Content-Disposition",
+                        "attachment; filename=\"escala-2027-08.xlsx\""))
+                .andExpect(content().bytes(spreadsheet));
+
+        verify(spreadsheetService).exportPublishedSchedule(2027, 8);
     }
 
     @Test

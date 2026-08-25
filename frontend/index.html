@@ -335,6 +335,24 @@
                         <button class="secondary-button" id="load-schedule-button">Consultar</button>
                         <button class="primary-button compact admin-only" id="generate-schedule-button">Gerar escala</button>
                         <button class="success-button admin-only hidden" id="publish-schedule-button">Publicar</button>
+                        <div class="export-actions hidden" id="export-schedule-control">
+                            <div class="export-control">
+                                <label for="export-schedule-format">Formato de exportação</label>
+                                <div class="export-select-wrap">
+                                    <select id="export-schedule-format">
+                                        <option value="list">PDF — Lista</option>
+                                        <option value="calendar">PDF — Calendário</option>
+                                        <option value="xlsx">Planilha Excel</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="secondary-button export-button" id="export-schedule-button">
+                                <svg aria-hidden="true" viewBox="0 0 24 24">
+                                    <path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14" />
+                                </svg>
+                                Exportar
+                            </button>
+                        </div>
                     </div>
                     <div class="module-feedback" id="schedule-feedback">Selecione o período da escala.</div>
                     <div class="schedule-summary hidden" id="schedule-summary"></div>

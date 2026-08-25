@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Locale;
@@ -43,7 +44,11 @@ public class MonthlySchedulePdfService {
             MonthlyScheduleExportDataService exportDataService,
             TemplateEngine templateEngine
     ) {
-        this(exportDataService, templateEngine, Clock.systemDefaultZone());
+        this(
+                exportDataService,
+                templateEngine,
+                Clock.system(ZoneId.of("America/Sao_Paulo"))
+        );
     }
 
     MonthlySchedulePdfService(

@@ -1701,6 +1701,26 @@ button {
     .dashboard-grid {
         grid-template-columns: 1fr;
     }
+
+    .toolbar {
+        flex-wrap: wrap;
+    }
+
+    .toolbar > .compact-field,
+    .toolbar > button,
+    .toolbar > .export-actions {
+        flex-shrink: 0;
+    }
+
+    .export-actions {
+        margin-left: auto;
+    }
+
+    .data-row {
+        min-width: 600px;
+        padding-inline: 14px;
+        gap: 12px;
+    }
 }
 
 @media (max-width: 820px) {

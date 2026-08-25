@@ -80,6 +80,44 @@ class MonthlyScheduleGenerationServiceIntegrationTest {
     }
 
     @Test
+    void shouldIgnorePendingAndRejectedUnavailabilities() {
+        Firefighter pendingFirefighter = createFirefighter(60, true);
+        Firefighter rejectedFirefighter = createFirefighter(61, true);
+
+        User administrator = userRepository.saveAndFlush(createUser(
+                "Administrador das Indisponibilidades",
+                "generation-review-admin@escala24.com",
+                Role.ADMIN,
+                true));
+
+        YearMonth requestedMonth = YearMonth.of(2085, 6);
+
+        createUnavailability(
+                pendingFirefighter,
+                requestedMonth,
+                UnavailabilityStatus.PENDING,
+                null);
+
+        createUnavailability(
+                rejectedFirefighter,
+                requestedMonth,
+                UnavailabilityStatus.REJECTED,
+                administrator);
+
+        MonthlyScheduleGenerationResponse response = generationService.generate(
+                new MonthlyScheduleGenerationRequest(
+                        requestedMonth.getYear(),
+                        requestedMonth.getMonthValue()));
+
+        assertThat(response.assignments())
+                .hasSize(requestedMonth.lengthOfMonth())
+                .extracting(DutyAssignmentResponse::firefighterId)
+                .contains(
+                        pendingFirefighter.getId(),
+                        rejectedFirefighter.getId());
+    }
+
+    @Test
     void shouldRespectRestAcrossMonthBoundaries() {
         Firefighter previousMonthFirefighter = createFirefighter(30, true);
 
@@ -390,6 +428,28 @@ class MonthlyScheduleGenerationServiceIntegrationTest {
         assignment.setDayType(dayType);
 
         return dutyAssignmentRepository.saveAndFlush(assignment);
+    }
+
+    private Unavailability createUnavailability(
+            Firefighter firefighter,
+            YearMonth requestedMonth,
+            UnavailabilityStatus status,
+            User reviewer) {
+        Unavailability unavailability = new Unavailability();
+        unavailability.setFirefighter(firefighter);
+        unavailability.setType(
+                UnavailabilityType.PERSONAL_COMMITMENT);
+        unavailability.setStartDate(requestedMonth.atDay(1));
+        unavailability.setEndDate(requestedMonth.atEndOfMonth());
+        unavailability.setReason("Período que não deve bloquear a geração");
+        unavailability.setStatus(status);
+
+        if (reviewer != null) {
+            unavailability.setReviewedBy(reviewer);
+            unavailability.setReviewedAt(LocalDateTime.now());
+        }
+
+        return unavailabilityRepository.saveAndFlush(unavailability);
     }
 
     private Firefighter createFirefighter(

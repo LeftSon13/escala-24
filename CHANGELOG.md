@@ -7,18 +7,23 @@ e o projeto utiliza [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ## [Não lançado]
 
+## [1.1.1] - 2026-08-25
+
 ### Adicionado
 
 - workflow de integração contínua para validar a sintaxe JavaScript, a construção da imagem do frontend e a configuração do Nginx.
 
 ### Corrigido
+
 - data exibida no cabeçalho do dashboard passa a ser calculada dinamicamente conforme a data do computador.
-
 - configuração inicial do cliente desktop passa a utilizar a mesma versão do instalador ao selecionar as imagens do backend e frontend.
-
 - formulários modais passam a aceitar o envio pela tecla `Enter`, mantendo os botões de cancelamento apenas para fechar a janela.
-
 - layout do dashboard deixa de aplicar um recuo duplicado e passa a aproveitar corretamente o espaço disponível em janelas não maximizadas.
+
+### Alterado
+
+- versões do backend, cliente desktop, pacote de implantação e workflow de imagens alinhadas em `1.1.1`;
+- documentação do cliente desktop atualizada para refletir o fluxo de instalação e inicialização validado.
 
 ## [1.1.0] - 2026-08-24
 
@@ -61,6 +66,7 @@ e o projeto utiliza [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 - integração contínua com GitHub Actions;
 - guia de instalação, operação e segurança no README.
 
-[Não lançado]: https://github.com/LeftSon13/escala-24/compare/v1.1.0...HEAD
+[Não lançado]: https://github.com/LeftSon13/escala-24/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/LeftSon13/escala-24/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/LeftSon13/escala-24/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/LeftSon13/escala-24/releases/tag/v1.0.0

@@ -111,7 +111,7 @@ Os arquivos atualmente existentes nesta pasta são:
 | ✅ Concluído | [04 — Backend em camadas](./04-backend-em-camadas.md) |
 | ✅ Concluído | [05 — Fluxo completo de uma requisição](./05-fluxo-completo-de-uma-requisicao.md) |
 | ✅ Concluído | [06 — Tratamento de erros](./06-tratamento-de-erros.md) |
-| ⬜ Planejado | 07 — Segurança |
+| ✅ Concluído | 07 — Segurança |
 
 
 Os capítulos anteriores encaminham autenticação, autorização, sessão e CSRF

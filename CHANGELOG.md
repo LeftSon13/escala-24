@@ -7,6 +7,10 @@ e o projeto utiliza [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ## [Não lançado]
 
+### Adicionado
+
+- workflow de integração contínua para validar a sintaxe JavaScript, a construção da imagem do frontend e a configuração do Nginx.
+
 ### Corrigido
 - data exibida no cabeçalho do dashboard passa a ser calculada dinamicamente conforme a data do computador.
 

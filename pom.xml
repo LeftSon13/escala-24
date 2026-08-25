@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>br.com.escala24</groupId>
 	<artifactId>escala24</artifactId>
-	<version>1.1.1</version>
+	<version>1.2.0</version>
 	<name>Escala 24</name>
 	<description>Sistema web para gerenciamento e geração de escalas mensais de plantão</description>
 	<url>https://github.com/LeftSon13/escala-24</url>

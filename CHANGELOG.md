@@ -7,6 +7,25 @@ e o projeto utiliza [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ## [Não lançado]
 
+## [1.2.0] - 2026-08-25
+
+### Adicionado
+
+- exportação da escala mensal publicada em PDF no formato de lista e de calendário;
+- exportação da escala mensal publicada em planilha Excel;
+- documentação das regras de negócio da geração de escalas e cobertura dos estados de indisponibilidade.
+
+### Corrigido
+
+- dashboard e tabelas operacionais adaptados para janelas menores sem sobreposição ou perda das ações;
+- horário de geração dos PDFs calculado no fuso horário de Brasília;
+- ações da tela de escalas exibidas somente quando aplicáveis ao período e ao estado consultado;
+- controle visual de notificações removido enquanto não existe um fluxo funcional correspondente.
+
+### Alterado
+
+- versões do backend, cliente desktop, pacote de implantação e workflow de imagens alinhadas em `1.2.0`.
+
 ## [1.1.1] - 2026-08-25
 
 ### Adicionado
@@ -66,7 +85,8 @@ e o projeto utiliza [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 - integração contínua com GitHub Actions;
 - guia de instalação, operação e segurança no README.
 
-[Não lançado]: https://github.com/LeftSon13/escala-24/compare/v1.1.1...HEAD
+[Não lançado]: https://github.com/LeftSon13/escala-24/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/LeftSon13/escala-24/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/LeftSon13/escala-24/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/LeftSon13/escala-24/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/LeftSon13/escala-24/releases/tag/v1.0.0

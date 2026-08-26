@@ -116,6 +116,7 @@ Os arquivos atualmente existentes nesta pasta são:
 | ✅ Concluído | [09 — JPA e repositories](./09-jpa-e-repositories.md) |
 | ✅ Concluído | [10 — Flyway](./10-flyway.md) |
 | ✅ Concluído | [11 — Configuração e ambientes](./11-configuracao-e-ambientes.md) |
+| ✅ Concluído | [12 — Testes: visão geral](./12-testes-visao-geral.md) |
 
 
 Os capítulos anteriores encaminham autenticação, autorização, sessão e CSRF

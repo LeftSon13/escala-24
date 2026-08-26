@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
 
   backend:
-    image: ghcr.io/leftson13/escala-24-backend:${ESCALA24_VERSION:-1.1.1}
+    image: ghcr.io/leftson13/escala-24-backend:${ESCALA24_VERSION:-1.2.0}
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
@@ -45,7 +45,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: ghcr.io/leftson13/escala-24-frontend:${ESCALA24_VERSION:-1.1.1}
+    image: ghcr.io/leftson13/escala-24-frontend:${ESCALA24_VERSION:-1.2.0}
     ports:
       - "3000:80"
     depends_on:

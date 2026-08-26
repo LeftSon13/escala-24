@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Escala mensal</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 16mm 14mm 16mm;
+        }
+
+        body {
+            color: #172033;
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            line-height: 1.35;
+        }
+
+        h1 {
+            color: #0f2747;
+            font-size: 22px;
+            margin: 0 0 4px;
+        }
+
+        .subtitle {
+            color: #52637a;
+            font-size: 12px;
+            margin: 0 0 16px;
+        }
+
+        .metadata {
+            background: #eef4fa;
+            border-left: 4px solid #2563a6;
+            margin-bottom: 16px;
+            padding: 9px 12px;
+        }
+
+        .metadata span {
+            display: inline-block;
+            margin-right: 24px;
+        }
+
+        table {
+            -fs-table-paginate: paginate;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
+
+        th {
+            background: #173b67;
+            color: #ffffff;
+            font-size: 9px;
+            padding: 7px 6px;
+            text-align: left;
+        }
+
+        td {
+            border-bottom: 1px solid #d8e0ea;
+            padding: 6px;
+            vertical-align: top;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f7f9fc;
+        }
+
+        .date-column {
+            width: 17%;
+        }
+
+        .type-column {
+            width: 22%;
+        }
+
+        .registration {
+            color: #607086;
+            display: block;
+            font-size: 9px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Escala mensal de plantões</h1>
+    <p class="subtitle"
+       th:text="|${#strings.capitalize(monthName)} de ${schedule.year}|">
+        Mês e ano
+    </p>
+
+    <div class="metadata">
+        <span><strong>Status:</strong> Publicada</span>
+        <span><strong>Documento gerado em:</strong> <span th:text="${generatedAt}">data</span></span>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="date-column">Data</th>
+                <th class="type-column">Classificação</th>
+                <th>Bombeiro</th>
+                <th>Horário</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="duty : ${assignments}">
+                <td th:text="${duty.dutyDate}">01/08/2026</td>
+                <td th:text="${duty.dayType}">Dia útil</td>
+                <td>
+                    <strong th:text="${duty.firefighterName}">Nome</strong>
+                    <span class="registration" th:text="${duty.firefighterRegistration}">Matrícula</span>
+                </td>
+                <td>
+                    <span th:text="${duty.startDateTime}">01/08 08:00</span>
+                    até
+                    <span th:text="${duty.endDateTime}">02/08 08:00</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

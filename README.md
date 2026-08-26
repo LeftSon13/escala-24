@@ -11,16 +11,36 @@ O Escala 24 centraliza o cadastro da equipe, indisponibilidades, feriados e esca
 
 ## Demonstração
 
+### Dashboard operacional
+
+![Dashboard operacional do Escala 24 no aplicativo desktop](docs/images/dashboard.png)
+
+O dashboard reúne os principais indicadores da operação, a escala mensal e os
+próximos plantões em uma interface adaptada tanto ao navegador quanto ao
+aplicativo desktop.
+
+### Escala mensal e exportações
+
+![Escala mensal publicada com opções de exportação](docs/images/monthly-schedule.png)
+
+Uma escala publicada pode ser consultada por mês e exportada como PDF em lista,
+PDF em calendário ou planilha Excel.
+
+### Acesso seguro
+
 ![Tela de login do Escala 24](docs/images/login.png)
 
 A interface é acessada pelo navegador e se comunica com a API por meio do
-Nginx, mantendo frontend e backend sob a mesma origem.
+Nginx, mantendo frontend e backend sob a mesma origem. A mesma interface é
+apresentada pelo cliente Electron no Windows.
 
 ## Objetivo
 
 O projeto foi desenvolvido como uma aplicação completa para uma única corporação ou equipe de bombeiros, permitindo que administradores organizem a operação e que bombeiros consultem suas escalas e registrem indisponibilidades.
 
-Esta é a primeira versão do sistema e também um projeto de aprendizado prático sobre desenvolvimento de software, arquitetura web, segurança, testes automatizados, banco de dados, integração contínua e Docker.
+A versão 1.2.0 encerra uma etapa de aprendizado e portfólio que percorreu
+desenvolvimento web, aplicativo desktop, segurança, testes automatizados, banco
+de dados, integração contínua, Docker e distribuição para Windows.
 
 ## Funcionalidades
 
@@ -48,6 +68,9 @@ Esta é a primeira versão do sistema e também um projeto de aprendizado práti
 - consulta da escala por mês e ano;
 - publicação da escala;
 - remanejamento de plantões;
+- exportação da escala publicada em PDF no formato de lista;
+- exportação da escala publicada em PDF no formato de calendário;
+- exportação da escala publicada em planilha Excel;
 - validação de descanso obrigatório;
 - validação de indisponibilidades e bombeiros ativos.
 
@@ -58,7 +81,8 @@ Esta é a primeira versão do sistema e também um projeto de aprendizado práti
 - gerenciamento de bombeiros;
 - gerenciamento de indisponibilidades;
 - gerenciamento de feriados;
-- visualização e geração de escalas mensais.
+- visualização e geração de escalas mensais;
+- layout responsivo para navegador e aplicativo desktop.
 
 ## Arquitetura
 
@@ -294,7 +318,7 @@ A pipeline configura o Java 21, executa `mvn verify`, inicia o PostgreSQL tempor
 
 ## Cliente desktop
 
-O Escala 24 possui um cliente para Windows construído com Electron e distribuído por meio de um instalador `.exe`. Ele orienta a primeira configuração, inicia os serviços locais com Docker Compose, detecta indisponibilidades e preserva os dados entre reinicializações.
+O Escala 24 possui um cliente para Windows construído com Electron e distribuído por meio de um instalador `.exe`. Ele orienta a primeira configuração, inicia os serviços locais com Docker Compose, detecta indisponibilidades e preserva os dados entre reinicializações. O instalador da versão 1.2.0 foi validado em atualização sobre uma instalação existente, mantendo as configurações e os dados locais.
 
 Consulte o [guia do cliente desktop](docs/desktop-client.md) para entender a arquitetura, instalação, geração do instalador, limitações e possíveis evoluções.
 
@@ -340,15 +364,17 @@ Antes de disponibilizar a aplicação pela internet, é necessário:
 - definir políticas de atualização e recuperação;
 - configurar monitoramento e registros operacionais.
 
-## Escopo da versão 1.0
+## Escopo do projeto
 
-A versão 1.0 foi planejada para uso piloto por uma única corporação ou equipe de bombeiros.
+A versão 1.2.0 mantém o escopo de uso por uma única corporação ou equipe de
+bombeiros e foi preparada para aprendizado, portfólio e demonstração local.
 
 Recursos como múltiplas organizações, cobrança, planos comerciais, recuperação de senha por e-mail e infraestrutura gerenciada ficam reservados para versões futuras.
 
 ## Versões e segurança
 
-As mudanças de cada versão são registradas no [CHANGELOG](CHANGELOG.md).
+A versão atual preparada para demonstração é a `1.2.0`. As mudanças de cada
+versão são registradas no [CHANGELOG](CHANGELOG.md).
 
 Vulnerabilidades devem ser comunicadas de forma privada conforme a
 [política de segurança](SECURITY.md), sem publicar credenciais ou detalhes de

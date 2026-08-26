@@ -125,6 +125,9 @@ Os arquivos atualmente existentes nesta pasta são:
 | ✅ Concluído | [18 — Testes](./18-testes.md) |
 | ✅ Concluído | [19 — Testcontainers](./19-testcontainers.md) |
 | ✅ Concluído | [20 — Cobertura com JaCoCo](./20-cobertura-com-jacoco.md) |
+| ✅ Concluído | [21 — Docker](./21-docker.md) |
+| ✅ Concluído | [22 — Integração contínua](./22-integracao-continua.md) |
+| ✅ Concluído | [23 — Segurança do repositório](./23-seguranca-do-repositorio.md) |
 
 
 Os capítulos anteriores encaminham autenticação, autorização, sessão e CSRF

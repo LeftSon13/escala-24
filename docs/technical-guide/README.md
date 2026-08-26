@@ -118,6 +118,7 @@ Os arquivos atualmente existentes nesta pasta são:
 | ✅ Concluído | [11 — Configuração e ambientes](./11-configuracao-e-ambientes.md) |
 | ✅ Concluído | [12 — Testes: visão geral](./12-testes-visao-geral.md) |
 | ✅ Concluído | [13 — Testes unitários](./13-testes-unitarios.md) |
+| ✅ Concluído | [14 — Testes de integração](./14-testes-de-integracao.md) |
 
 
 Os capítulos anteriores encaminham autenticação, autorização, sessão e CSRF

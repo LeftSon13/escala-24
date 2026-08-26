@@ -115,6 +115,7 @@ Os arquivos atualmente existentes nesta pasta são:
 | ✅ Concluído | [08 — Banco de dados](./08-banco-de-dados.md) |
 | ✅ Concluído | [09 — JPA e repositories](./09-jpa-e-repositories.md) |
 | ✅ Concluído | [10 — Flyway](./10-flyway.md) |
+| ✅ Concluído | [11 — Configuração e ambientes](./11-configuracao-e-ambientes.md) |
 
 
 Os capítulos anteriores encaminham autenticação, autorização, sessão e CSRF
@@ -123,6 +124,8 @@ capítulo 08 inicia a documentação do modelo de banco de dados.
 O capítulo 09 inicia a explicação dos mapeamentos JPA e do acesso por
 repositories. O capítulo 10 inicia a explicação da evolução versionada do
 schema com Flyway.
+O capítulo 11 inicia a explicação das configurações e dos contextos de
+execução.
 
 Legenda:
 

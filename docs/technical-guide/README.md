@@ -113,11 +113,14 @@ Os arquivos atualmente existentes nesta pasta são:
 | ✅ Concluído | [06 — Tratamento de erros](./06-tratamento-de-erros.md) |
 | ✅ Concluído | 07 — Segurança |
 | 🟡 Em elaboração | [08 — Banco de dados](./08-banco-de-dados.md) |
+| 🟡 Em elaboração | [09 — JPA e repositories](./09-jpa-e-repositories.md) |
 
 
 Os capítulos anteriores encaminham autenticação, autorização, sessão e CSRF
 para um capítulo próprio. Assim, o capítulo 07 aprofunda Segurança, e o
 capítulo 08 inicia a documentação do modelo de banco de dados.
+O capítulo 09 inicia a explicação dos mapeamentos JPA e do acesso por
+repositories.
 
 Legenda:
 

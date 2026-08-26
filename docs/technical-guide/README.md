@@ -119,6 +119,12 @@ Os arquivos atualmente existentes nesta pasta são:
 | ✅ Concluído | [12 — Testes: visão geral](./12-testes-visao-geral.md) |
 | ✅ Concluído | [13 — Testes unitários](./13-testes-unitarios.md) |
 | ✅ Concluído | [14 — Testes de integração](./14-testes-de-integracao.md) |
+| ✅ Concluído | [15 — Testes de controller](./15-testes-de-controller.md) |
+| ✅ Concluído | [16 — Testes end-to-end](./16-testes-end-to-end.md) |
+| ✅ Concluído | [17 — Administrador inicial](./17-administrador-inicial.md) |
+| ✅ Concluído | [18 — Testes](./18-testes.md) |
+| ✅ Concluído | [19 — Testcontainers](./19-testcontainers.md) |
+| ✅ Concluído | [20 — Cobertura com JaCoCo](./20-cobertura-com-jacoco.md) |
 
 
 Os capítulos anteriores encaminham autenticação, autorização, sessão e CSRF

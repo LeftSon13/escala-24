@@ -112,15 +112,17 @@ Os arquivos atualmente existentes nesta pasta são:
 | ✅ Concluído | [05 — Fluxo completo de uma requisição](./05-fluxo-completo-de-uma-requisicao.md) |
 | ✅ Concluído | [06 — Tratamento de erros](./06-tratamento-de-erros.md) |
 | ✅ Concluído | 07 — Segurança |
-| 🟡 Em elaboração | [08 — Banco de dados](./08-banco-de-dados.md) |
-| 🟡 Em elaboração | [09 — JPA e repositories](./09-jpa-e-repositories.md) |
+| ✅ Concluído | [08 — Banco de dados](./08-banco-de-dados.md) |
+| ✅ Concluído | [09 — JPA e repositories](./09-jpa-e-repositories.md) |
+| ✅ Concluído | [10 — Flyway](./10-flyway.md) |
 
 
 Os capítulos anteriores encaminham autenticação, autorização, sessão e CSRF
 para um capítulo próprio. Assim, o capítulo 07 aprofunda Segurança, e o
 capítulo 08 inicia a documentação do modelo de banco de dados.
 O capítulo 09 inicia a explicação dos mapeamentos JPA e do acesso por
-repositories.
+repositories. O capítulo 10 inicia a explicação da evolução versionada do
+schema com Flyway.
 
 Legenda:
 

@@ -59,7 +59,7 @@ falha na regra de negócio.
 - [`PostgreSqlTestContainerConfiguration.java`](../../src/test/java/br/com/escala24/config/PostgreSqlTestContainerConfiguration.java)
 - [`pom.xml`](../../pom.xml)
 - [`MonthlySchedulePersistenceIntegrationTest.java`](../../src/test/java/br/com/escala24/entity/MonthlySchedulePersistenceIntegrationTest.java)
-- [`14 — Testes de integração`](./14-testes-de-integracao.md)
+- [`18 — Testes`](./18-testes.md)
 
 ## Perguntas de revisão
 

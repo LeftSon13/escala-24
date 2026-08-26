@@ -65,7 +65,7 @@ Cobertura é um mapa das áreas visitadas numa inspeção: visitar não prova qu
 - [`pom.xml`](../../pom.xml)
 - [`backend-ci.yml`](../../.github/workflows/backend-ci.yml)
 - [`18 — Testes`](./18-testes.md)
-- [`13 — Testes unitários`](./13-testes-unitarios.md)
+- [`18 — Testes`](./18-testes.md)
 
 ## Perguntas de revisão
 

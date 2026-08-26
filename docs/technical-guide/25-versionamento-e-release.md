@@ -41,6 +41,17 @@ O changelog registra `1.0.0` em 2026-08-17, `1.1.0`, `1.1.1` e `1.2.0` em
 reconstruir cada atividade humana da release. O estado atual é `1.2.0`, não o
 processo histórico inteiro.
 
+## A primeira versão estável
+
+A tag `v1.0.0` representa a primeira versão estável registrada no histórico do
+projeto. A partir dela, o repositório continuou evoluindo pelas versões
+`v1.1.0`, `v1.1.1` e `v1.2.0`.
+
+O histórico, as tags e o `CHANGELOG.md` permitem relacionar essas versões ao
+código correspondente. Eles não permitem reconstruir com certeza todas as
+decisões humanas e etapas manuais realizadas durante cada release; por isso,
+este guia documenta apenas o processo que pode ser confirmado no repositório.
+
 ## Workflows e artefatos
 
 Em tags `v*`, `container-images.yml` deriva a versão da tag, constrói e publica

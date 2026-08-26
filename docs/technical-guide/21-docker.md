@@ -103,7 +103,7 @@ engano; não tratar Compose local como infraestrutura completa de produção.
 - [`frontend/Dockerfile`](../../frontend/Dockerfile)
 - [`frontend/nginx.conf`](../../frontend/nginx.conf)
 - [`desktop/deployment/docker-compose.yml`](../../desktop/deployment/docker-compose.yml)
-- [`11 — Configuração e ambientes`](./11-configuracao-e-ambientes.md)
+- [`11 — Frontend`](./11-frontend.md)
 
 ## Perguntas de revisão
 

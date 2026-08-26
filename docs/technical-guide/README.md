@@ -115,12 +115,12 @@ Os arquivos atualmente existentes nesta pasta são:
 | ✅ Concluído | [08 — Banco de dados](./08-banco-de-dados.md) |
 | ✅ Concluído | [09 — JPA e repositories](./09-jpa-e-repositories.md) |
 | ✅ Concluído | [10 — Flyway](./10-flyway.md) |
-| ✅ Concluído | [11 — Configuração e ambientes](./11-configuracao-e-ambientes.md) |
-| ✅ Concluído | [12 — Testes: visão geral](./12-testes-visao-geral.md) |
-| ✅ Concluído | [13 — Testes unitários](./13-testes-unitarios.md) |
-| ✅ Concluído | [14 — Testes de integração](./14-testes-de-integracao.md) |
-| ✅ Concluído | [15 — Testes de controller](./15-testes-de-controller.md) |
-| ✅ Concluído | [16 — Testes end-to-end](./16-testes-end-to-end.md) |
+| 🟡 Em elaboração | [11 — Frontend](./11-frontend.md) |
+| 🟡 Em elaboração | [12 — Integração com API](./12-integracao-com-api.md) |
+| 🟡 Em elaboração | [13 — Nginx](./13-nginx.md) |
+| 🟡 Em elaboração | [14 — Indisponibilidades](./14-indisponibilidades.md) |
+| 🟡 Em elaboração | [15 — Geração de escalas](./15-geracao-de-escalas.md) |
+| 🟡 Em elaboração | [16 — Publicação e remanejamento](./16-publicacao-e-remanejamento.md) |
 | ✅ Concluído | [17 — Administrador inicial](./17-administrador-inicial.md) |
 | ✅ Concluído | [18 — Testes](./18-testes.md) |
 | ✅ Concluído | [19 — Testcontainers](./19-testcontainers.md) |
@@ -140,8 +140,8 @@ capítulo 08 inicia a documentação do modelo de banco de dados.
 O capítulo 09 inicia a explicação dos mapeamentos JPA e do acesso por
 repositories. O capítulo 10 inicia a explicação da evolução versionada do
 schema com Flyway.
-O capítulo 11 inicia a explicação das configurações e dos contextos de
-execução.
+O capítulo 11 inicia a explicação do frontend, o capítulo 12 documenta sua
+integração com a API e o capítulo 13 detalha o Nginx como servidor e proxy.
 
 Legenda:
 

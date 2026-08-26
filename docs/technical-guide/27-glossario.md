@@ -17,11 +17,28 @@ Protocolo usado nas requisições e respostas entre cliente e servidor.
 ### JSON
 Formato textual usado nos corpos de requests e responses.
 
+### fetch
+API do navegador usada pelo JavaScript para realizar requisições HTTP. No
+Escala 24, `app.js` utiliza `fetch` para se comunicar com os endpoints do
+backend. Veja o [Capítulo 12](./12-integracao-com-api.md).
+
 ### endpoint
 Rota HTTP que oferece uma operação da API.
 
+### status HTTP
+Código numérico da resposta HTTP que informa o resultado de uma requisição.
+Códigos `2xx` indicam sucesso, enquanto códigos `4xx` representam erros
+relacionados à requisição ou às regras aplicadas pelo servidor. No Escala 24,
+o frontend interpreta esses resultados para apresentar sucesso ou erro ao
+usuário.
+
+### CRUD
+Sigla para *Create, Read, Update, Delete*: criar, consultar, atualizar e remover
+dados. No Escala 24, várias funcionalidades possuem operações desse tipo, mas
+as regras de negócio do sistema não se resumem a CRUD.
+
 ### controller
-Camada que recebe HTTP e coordena a resposta; veja o [Capítulo 15](./15-testes-de-controller.md).
+Camada que recebe HTTP e coordena a resposta; veja os testes e o fluxo HTTP nos capítulos [04](./04-backend-em-camadas.md) e [18](./18-testes.md).
 
 ### service
 Componente que concentra operações e regras da aplicação.
@@ -34,6 +51,23 @@ Objeto Java mapeado para persistência; não é o mesmo que DTO.
 
 ### DTO
 Objeto de transferência usado na entrada/saída HTTP, separado da entity.
+
+### DOM
+*Document Object Model*. Representação da estrutura da página HTML que pode ser
+consultada e modificada pelo JavaScript. No Escala 24, `app.js` manipula o DOM
+diretamente para atualizar telas, listas, formulários, dialogs e estados da
+interface. Veja o [Capítulo 11](./11-frontend.md).
+
+### DRAFT / PUBLISHED
+Estados da escala mensal. `DRAFT` representa uma escala ainda passível de
+alterações; `PUBLISHED` representa uma escala publicada, para a qual o sistema
+bloqueia remanejamentos. Veja o [Capítulo 16](./16-publicacao-e-remanejamento.md).
+
+### PENDING / APPROVED / REJECTED
+Estados de uma solicitação de indisponibilidade. `PENDING` indica que ainda
+aguarda revisão, `APPROVED` que foi aprovada e `REJECTED` que foi rejeitada.
+Somente indisponibilidades aprovadas bloqueiam a elegibilidade para plantões.
+Veja o [Capítulo 14](./14-indisponibilidades.md).
 
 ### JPA / Hibernate
 JPA define o mapeamento objeto-relacional; Hibernate fornece a implementação usada.
@@ -81,7 +115,7 @@ Procedimento inicial; no projeto, cria o primeiro administrador configurado. Vej
 JUnit executa testes; AssertJ verifica expectativas; Mockito substitui dependências com mocks.
 
 ### MockMvc
-Ferramenta para exercitar a camada HTTP em memória; veja o [Capítulo 15](./15-testes-de-controller.md).
+Ferramenta para exercitar a camada HTTP em memória; veja o [Capítulo 18](./18-testes.md).
 
 ### Testcontainers
 Biblioteca que inicia dependências em containers; o projeto usa PostgreSQL. Veja o [Capítulo 19](./19-testcontainers.md).
@@ -139,6 +173,9 @@ Secret é dado sensível; Gitleaks procura padrões de credenciais no repositór
 
 ## Termos que costumam ser confundidos
 
+- CRUD × regra de negócio: operações sobre dados × decisões e restrições do domínio;
+- sessão × CSRF: identificação da sessão autenticada × proteção contra requisições forjadas;
+- DRAFT × PUBLISHED: escala alterável × escala publicada e protegida contra remanejamento;
 - entity × DTO: persistência × transporte;
 - JPA × Hibernate: especificação × implementação;
 - Git × GitHub: ferramenta × plataforma;

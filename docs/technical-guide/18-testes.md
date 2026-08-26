@@ -2,79 +2,66 @@
 
 ## Objetivo deste capítulo
 
-Este capítulo consolida a estratégia de testes do Escala 24 e funciona como
-mapa para os capítulos especializados.
+Este capítulo apresenta uma visão consolidada da estratégia de testes do Escala 24,
+mostrando o papel de cada nível e como as diferentes ferramentas se complementam.
+Os capítulos 19 e 20 aprofundam, respectivamente, Testcontainers e cobertura com
+JaCoCo.
 
-> **Pergunta central:** como a estratégia completa se organiza e onde estudar
-> cada nível em profundidade?
+> **Pergunta central:** qual pergunta cada nível de teste responde e como esses níveis se complementam no Escala 24?
 
-## A pirâmide como modelo
-
-A pirâmide é um modelo didático: unidades isoladas na base, web e integração
-acima, E2E no topo. Ela não afirma que a quantidade atual segue proporção ideal
-nem mede qualidade.
+## Níveis complementares
 
 ```text
-                 E2E
-        controller/web
-       integração e persistência
-             unitários
+unitário → comportamento isolado
+web/controller → contrato HTTP
+integração → colaboração real e persistência
+E2E → jornada completa do usuário
 ```
 
-O projeto possui testes unitários, web/controller e integração; não possui uma
-suíte E2E automatizada dedicada.
+A pirâmide é modelo didático; quantidade de classes não demonstra proporção ideal nem qualidade. O projeto possui os três primeiros níveis, mas não uma suíte E2E automatizada dedicada.
+
+| Nível | Tecnologia/exemplo | Pode evidenciar | Não garante |
+| --- | --- | --- | --- |
+| Unitário | JUnit, AssertJ, Mockito | regra e decisão isolada | banco e HTTP |
+| Controller | `@WebMvcTest`, MockMvc | binding, JSON, validação e status | PostgreSQL e frontend |
+| Integração | `@SpringBootTest`, Testcontainers | Spring, JPA, migrations e banco | jornada visual completa |
+| Segurança integrada | MockMvc + contexto real | autenticação/autorização em cenários | todos os fluxos |
+| E2E | não identificado | — | permanece lacuna |
+
+Arrange/Act/Assert ou Given/When/Then ajudam a ler preparação, execução e verificação; não são formato formal garantido para todos os testes.
+
+## Ferramentas e limites
+
+JUnit executa cenários; AssertJ verifica expectativas; Mockito controla dependências isoladas; MockMvc exerce HTTP em memória. Testcontainers fornece PostgreSQL temporário e JaCoCo mede execução. Mock não testa banco, integração não é E2E, teste passando não prova ausência de bugs e cobertura não é qualidade.
 
 ## Mapa de referência
 
 | Dúvida | Onde estudar |
 | --- | --- |
-| Estratégia geral? | [Capítulo 12](./12-testes-visao-geral.md) |
-| Classe isolada? | [Capítulo 13](./13-testes-unitarios.md) |
-| Spring, JPA e PostgreSQL? | [Capítulo 14](./14-testes-de-integracao.md) e [19](./19-testcontainers.md) |
-| Contrato HTTP? | [Capítulo 15](./15-testes-de-controller.md) |
-| Existe E2E? | [Capítulo 16](./16-testes-end-to-end.md) |
-| Cobertura? | [Capítulo 20](./20-cobertura-com-jacoco.md) |
-
-## Níveis e limites
-
-| Nível | Evidência principal | Não garante sozinho |
-| --- | --- | --- |
-| Unitário | regra ou decisão isolada | banco, HTTP e integração |
-| Controller | binding, validação, status e JSON | PostgreSQL e frontend |
-| Integração | colaboração, JPA, schema e banco de teste | jornada visual completa |
-| E2E | produto pela perspectiva do usuário, quando existente | todos os cenários |
-
-JUnit organiza cenários; AssertJ verifica resultados; Mockito controla
-dependências isoladas; MockMvc exercita HTTP em memória; Spring Boot, JPA,
-Flyway e Testcontainers suportam integração. Arrange/Act/Assert ou
-Given/When/Then são ferramentas mentais, não um formato formal garantido para
-todos os métodos.
-
-Mock não testa banco real, integração não é E2E, teste passando não prova
-ausência de bugs e cobertura não é qualidade.
+| Frontend e API | [11 — Frontend](./11-frontend.md) e [12 — Integração com API](./12-integracao-com-api.md) |
+| Nginx | [13 — Nginx](./13-nginx.md) |
+| Regras de domínio | [14 — Indisponibilidades](./14-indisponibilidades.md), [15 — Geração](./15-geracao-de-escalas.md) e [16 — Publicação](./16-publicacao-e-remanejamento.md) |
+| Testcontainers | [19 — Testcontainers](./19-testcontainers.md) |
+| Cobertura | [20 — Cobertura com JaCoCo](./20-cobertura-com-jacoco.md) |
 
 ## Onde estudar no código
 
 - [`src/test/java`](../../src/test/java/)
-- [Capítulo 12](./12-testes-visao-geral.md)
-- [Capítulo 13](./13-testes-unitarios.md)
-- [Capítulo 14](./14-testes-de-integracao.md)
-- [Capítulo 15](./15-testes-de-controller.md)
-- [Capítulo 16](./16-testes-end-to-end.md)
+- [`pom.xml`](../../pom.xml)
+- [Capítulo 19](./19-testcontainers.md)
+- [Capítulo 20](./20-cobertura-com-jacoco.md)
 
 ## Perguntas de revisão
 
-1. Para que serve a pirâmide como modelo?
-2. Qual capítulo explica testes unitários?
-3. O que controller testa que unitário não necessariamente testa?
-4. Por que integração não equivale a E2E?
-5. Onde estudar Testcontainers?
-6. Por que quantidade não equivale a qualidade?
+1. O que diferencia unitário, controller e integração?
+2. Por que a pirâmide não mede qualidade?
+3. O que MockMvc verifica?
+4. Por que um mock não prova PostgreSQL?
+5. Existe E2E dedicada no projeto?
+6. Onde estudar Testcontainers e JaCoCo?
 
 ## Resumo
 
-Este capítulo é o mapa dos níveis documentados em 12–16. Unitários, web e
-integração se complementam; E2E dedicada permanece ausente.
+Os testes do Escala 24 formam níveis complementares: unidade, web e integração. Este capítulo orienta a navegação; Testcontainers e cobertura possuem capítulos próprios, e E2E dedicada não foi identificada.
 
-> **Frase de fixação:** uma estratégia de testes é um mapa de perguntas, não
-> apenas uma contagem de testes.
+> **Frase de fixação:** cada teste responde uma pergunta; nenhum responde todas.

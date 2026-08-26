@@ -59,6 +59,35 @@ projeto impõe merge ou rebase.
 Conflitos surgem quando linhas alteram regiões incompatíveis e Git não decide
 sozinho. `git status` ajuda a identificar o estado durante a resolução.
 
+## Comandos usados no fluxo
+
+Alguns comandos aparecem com frequência no trabalho do projeto:
+
+```bash
+git status
+git branch --show-current
+git fetch origin
+git add <arquivo>
+git commit -m "mensagem"
+git push origin <branch>
+```
+
+`git status` deve ser consultado antes e depois de operações importantes porque
+mostra a branch atual, alterações locais, arquivos preparados para commit e
+eventuais conflitos.
+
+`git fetch origin` atualiza as referências do repositório remoto sem integrar
+automaticamente essas mudanças à branch atual. Depois da revisão e do commit,
+`git push` publica os commits locais no remoto.
+
+Ao concluir uma tarefa, um estado como:
+```bash
+nothing to commit, working tree clean
+```
+indica que não existem alterações locais pendentes naquele momento. Isso não
+significa, por si só, que a branch esteja sincronizada com todas as outras
+branches do repositório.
+
 ## Estudo de caso e cuidados
 
 No fluxo didático, o desenvolvedor cria branch, commita e faz push; o GitHub

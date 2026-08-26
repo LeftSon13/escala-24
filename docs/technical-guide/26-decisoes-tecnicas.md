@@ -27,6 +27,47 @@ trade-off, sem inventar motivações históricas da equipe.
 “A implementação atual favorece” descreve evidência; não afirma uma justificativa
 histórica não registrada. Nenhuma decisão é universalmente melhor.
 
+## Frontend sem framework JavaScript
+
+O frontend atual utiliza HTML, CSS e JavaScript diretamente, sem React, Vue ou
+outro framework de interface.
+
+Para o porte atual do Escala 24, essa abordagem mantém poucas dependências e
+torna explícita a manipulação do DOM e das requisições HTTP. Em contrapartida,
+`app.js` concentra responsabilidades que poderiam exigir maior organização caso
+a interface crescesse significativamente.
+
+Essa implementação não significa que JavaScript puro seja sempre melhor que um
+framework. Ela atende ao tamanho e às necessidades observáveis desta versão do
+projeto. O frontend é detalhado no capítulo 11.
+
+## Aplicação única organizada em camadas
+
+O backend é implantado como uma única aplicação Spring Boot, mas internamente
+separa responsabilidades em controllers, services, repositories, entities,
+DTOs e configurações.
+
+Para uma aplicação desse porte, essa organização reduz a complexidade
+operacional de distribuir vários serviços independentes enquanto mantém
+responsabilidades técnicas separadas no código.
+
+O trade-off é que os módulos continuam pertencendo ao mesmo processo e ao mesmo
+ciclo de implantação. Separá-los em serviços independentes acrescentaria rede,
+deploy, observabilidade e consistência distribuída, complexidades que o projeto
+atual não precisa assumir.
+
+## O que poderia mudar em uma evolução comercial
+
+A versão atual demonstra uma arquitetura adequada ao escopo do projeto, mas uma
+evolução comercial poderia exigir novas decisões conforme surgissem requisitos
+reais, por exemplo em disponibilidade, observabilidade, gestão de secrets,
+implantação, escalabilidade ou experiência do frontend.
+
+Esses pontos são possibilidades arquiteturais, não funcionalidades planejadas
+ou ausências que necessariamente precisem ser corrigidas. Uma evolução deve ser
+guiada por requisitos e medições reais, e não pela adoção de tecnologias apenas
+por serem mais complexas.
+
 ## Comparações importantes
 
 Sessão mantém estado associado no servidor e normalmente usa um cookie para

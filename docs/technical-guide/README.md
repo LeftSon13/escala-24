@@ -112,11 +112,12 @@ Os arquivos atualmente existentes nesta pasta são:
 | ✅ Concluído | [05 — Fluxo completo de uma requisição](./05-fluxo-completo-de-uma-requisicao.md) |
 | ✅ Concluído | [06 — Tratamento de erros](./06-tratamento-de-erros.md) |
 | ✅ Concluído | 07 — Segurança |
+| 🟡 Em elaboração | [08 — Banco de dados](./08-banco-de-dados.md) |
 
 
 Os capítulos anteriores encaminham autenticação, autorização, sessão e CSRF
-para um capítulo próprio. Assim, o capítulo 07 aprofundará Segurança. Os
-capítulos posteriores ao 07 serão definidos conforme a evolução do guia e a análise do código atual.
+para um capítulo próprio. Assim, o capítulo 07 aprofunda Segurança, e o
+capítulo 08 inicia a documentação do modelo de banco de dados.
 
 Legenda:
 

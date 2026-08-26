@@ -128,6 +128,10 @@ Os arquivos atualmente existentes nesta pasta são:
 | ✅ Concluído | [21 — Docker](./21-docker.md) |
 | ✅ Concluído | [22 — Integração contínua](./22-integracao-continua.md) |
 | ✅ Concluído | [23 — Segurança do repositório](./23-seguranca-do-repositorio.md) |
+| ✅ Concluído | [24 — Git e Pull Requests](./24-git-e-pull-requests.md) |
+| ✅ Concluído | [25 — Versionamento e release](./25-versionamento-e-release.md) |
+| ✅ Concluído | [26 — Decisões técnicas](./26-decisoes-tecnicas.md) |
+| ✅ Concluído | [27 — Glossário](./27-glossario.md) |
 
 
 Os capítulos anteriores encaminham autenticação, autorização, sessão e CSRF

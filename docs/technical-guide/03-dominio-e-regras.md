@@ -86,7 +86,7 @@ O campo `active` pertence a `User`. Quando um bombeiro é desativado, o [`Firefi
 
 Na geração da escala, o [`MonthlyScheduleGenerationService`](../../src/main/java/br/com/escala24/service/MonthlyScheduleGenerationService.java) carrega somente bombeiros cujo usuário está ativo.
 
-Portanto, uma regra fundamental da versão 1.0.0 é:
+Portanto, uma regra fundamental da versão atual é:
 
 > Bombeiros inativos não podem ser selecionados para novos plantões.
 
@@ -199,7 +199,7 @@ stateDiagram-v2
     DRAFT --> PUBLISHED
 ```
 
-A versão 1.0.0 não implementa retorno de uma escala `PUBLISHED` para `DRAFT`.
+A versão 1.2.0 não implementa retorno de uma escala `PUBLISHED` para `DRAFT`.
 
 A combinação de ano e mês é única. A proteção existe na entidade e também no banco, por meio de `UNIQUE (schedule_year, schedule_month)` na migration [`V5__create_monthly_schedules_and_duty_assignments.sql`](../../src/main/resources/db/migration/V5__create_monthly_schedules_and_duty_assignments.sql).
 
@@ -325,7 +325,7 @@ Enquanto está em rascunho, o administrador ainda pode corrigir atribuições. D
 
 Uma **invariante** é uma condição que precisa continuar verdadeira para que o estado do sistema seja considerado válido.
 
-No Escala 24, podemos identificar como invariantes importantes da versão 1.0.0:
+No Escala 24, podemos identificar como invariantes importantes da versão 1.2.0:
 
 - não existir mais de uma escala para o mesmo mês e ano;
 - não existir mais de um plantão para a mesma data dentro da mesma escala;
@@ -436,7 +436,7 @@ Isso não significa que toda regra precise obrigatoriamente existir em todas as 
 
 ### Alternativas e limites
 
-Uma alternativa seria criar um componente de domínio ainda mais isolado para concentrar determinadas invariantes e reduzir repetição entre geração e remanejamento. A versão 1.0.0, porém, mantém essas verificações nos services responsáveis pelos casos de uso. Este capítulo descreve essa implementação atual; não afirma que seja a única arquitetura possível.
+Uma alternativa seria criar um componente de domínio ainda mais isolado para concentrar determinadas invariantes e reduzir repetição entre geração e remanejamento. A versão 1.2.0, porém, mantém essas verificações nos services responsáveis pelos casos de uso. Este capítulo descreve essa implementação atual; não afirma que seja a única arquitetura possível.
 
 Também é importante não interpretar “defesa em profundidade” como licença para duplicar qualquer validação indiscriminadamente. Repetição sem propósito aumenta o custo de manutenção. O valor está em combinar proteções que resolvem problemas diferentes: autorização, decisão de negócio e integridade persistida.
 

@@ -378,9 +378,10 @@ O Electron utiliza uma configuração restritiva:
 
 O instalador atual não possui certificado de assinatura de código. Por isso, o Windows pode exibir um aviso de segurança ao executá-lo em outro computador.
 
-## Evoluções futuras
+## Limitações conhecidas e possíveis evoluções
 
-As próximas versões poderão incluir:
+Os itens abaixo não fazem parte do escopo encerrado da versão 1.2.0, mas podem
+ser considerados em uma eventual evolução do projeto:
 
 - inicialização ou orientação automática do Docker Desktop;
 - configuração de um endereço de servidor remoto;
@@ -391,7 +392,6 @@ As próximas versões poderão incluir:
 - assinatura digital do instalador;
 - backup e restauração pela interface;
 - recuperação assistida de uma instalação com falha;
-- geração automatizada do instalador pelo GitHub Actions;
 - testes automatizados específicos para o processo Electron.
 
-A distribuição atual já oferece instalação, configuração do primeiro administrador, preparação do ambiente local e inicialização dos serviços. As próximas etapas serão voltadas à manutenção, recuperação, atualização e implantação em ambientes reais.
+A distribuição atual já oferece instalação, configuração do primeiro administrador, preparação do ambiente local, inicialização dos serviços e geração automatizada do instalador pelo GitHub Actions. Não há uma próxima versão comprometida para os itens listados acima.

@@ -5,7 +5,7 @@
 [![Secret Scan](https://github.com/LeftSon13/escala-24/actions/workflows/secret-scan.yml/badge.svg)](https://github.com/LeftSon13/escala-24/actions/workflows/secret-scan.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Sistema web para gerenciamento e geração de escalas mensais de plantão para equipes de bombeiros.
+Sistema web e desktop para gerenciamento e geração de escalas mensais de plantão para equipes de bombeiros.
 
 O Escala 24 centraliza o cadastro da equipe, indisponibilidades, feriados e escalas, aplicando regras operacionais para auxiliar a distribuição segura dos plantões.
 
@@ -308,13 +308,15 @@ Os limites atuais de qualidade são:
 
 ## Integração contínua
 
-O workflow `Backend CI` é executado pelo GitHub Actions:
+O GitHub Actions executa verificações e tarefas separadas para cada parte do projeto:
 
-- em Pull Requests direcionados à `main`;
-- depois de alterações incorporadas à `main`;
-- manualmente, quando necessário.
+- `Backend CI`: configura o Java 21, executa `mvn verify`, utiliza PostgreSQL temporário por meio do Testcontainers e publica o relatório do JaCoCo como artefato;
+- `Frontend CI`: valida o JavaScript, constrói a imagem do frontend e testa a configuração do Nginx;
+- `Secret Scan`: procura segredos adicionados acidentalmente ao histórico do repositório;
+- `Container Images`: publica imagens versionadas do backend e do frontend no GitHub Container Registry;
+- `Desktop Installer`: valida o cliente Electron e gera o instalador para Windows.
 
-A pipeline configura o Java 21, executa `mvn verify`, inicia o PostgreSQL temporário por meio do Testcontainers e publica o relatório do JaCoCo como artefato.
+Os workflows possuem eventos próprios para Pull Requests, alterações na `main`, tags de versão ou execução manual, conforme a finalidade de cada automação.
 
 ## Cliente desktop
 
@@ -322,12 +324,15 @@ O Escala 24 possui um cliente para Windows construído com Electron e distribuí
 
 Consulte o [guia do cliente desktop](docs/desktop-client.md) para entender a arquitetura, instalação, geração do instalador, limitações e possíveis evoluções.
 
+Para uma visão aprofundada da arquitetura, do domínio, dos testes e das decisões técnicas, consulte o [guia técnico do Escala 24](docs/technical-guide/README.md).
+
 ## Estrutura do projeto
 
 ```text
 escala-24/
 ├── .github/workflows/       # Pipeline de integração contínua
 ├── desktop/                 # Cliente Electron e pacote de implantação
+├── docs/                    # Guias técnicos e imagens da documentação
 ├── frontend/                # Interface web e configuração do Nginx
 ├── src/main/java/           # Código principal do backend
 ├── src/main/resources/      # Configurações e migrações do Flyway
@@ -369,7 +374,7 @@ Antes de disponibilizar a aplicação pela internet, é necessário:
 A versão 1.2.0 mantém o escopo de uso por uma única corporação ou equipe de
 bombeiros e foi preparada para aprendizado, portfólio e demonstração local.
 
-Recursos como múltiplas organizações, cobrança, planos comerciais, recuperação de senha por e-mail e infraestrutura gerenciada ficam reservados para versões futuras.
+Recursos como múltiplas organizações, cobrança, planos comerciais, recuperação de senha por e-mail e infraestrutura gerenciada não fazem parte do escopo encerrado da versão 1.2.0. Eles poderão ser reavaliados somente em uma eventual evolução comercial do projeto.
 
 ## Versões e segurança
 
@@ -384,6 +389,8 @@ exploração em issues abertas.
 
 Este projeto é distribuído sob a [licença MIT](LICENSE).
 
-## Autor
+## Autoria e colaboração
 
-Desenvolvido por [João Vinicius](https://github.com/LeftSon13) como projeto de aprendizado e construção de uma aplicação web completa.
+Desenvolvido por [João Vinicius](https://github.com/LeftSon13) como projeto de aprendizado e construção de um sistema web e desktop completo.
+
+O guia técnico final contou com a colaboração de [Jéssica Casaril](https://github.com/casariljessica).

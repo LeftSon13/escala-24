@@ -2,7 +2,7 @@
 
 ## Propósito deste capítulo
 
-Este capítulo apresenta o problema que o Escala 24 procura resolver, seus usuários, suas principais responsabilidades e o estado atual da versão 1.1.1.
+Este capítulo apresenta o problema que o Escala 24 procura resolver, seus usuários, suas principais responsabilidades e o estado final da versão 1.2.0.
 
 ## Problema atendido
 
@@ -40,7 +40,7 @@ Entre suas responsabilidades estão:
 
 A versão 1.0.0 foi o primeiro marco do projeto e foi desenvolvida para uso piloto por uma única corporação ou equipe de bombeiros. Ela oferecia autenticação, diferentes permissões para administradores e bombeiros, cadastro da equipe, gerenciamento de feriados e indisponibilidades, além da geração, consulta, publicação e remanejamento de escalas.
 
-O estado atual documentado corresponde à versão `1.1.1`. Além das funcionalidades centrais de operação, o projeto possui um cliente desktop para Windows, construído com Electron, distribuído por meio de instalador e preparado para orientar a configuração inicial da instalação.
+O estado final documentado corresponde à versão `1.2.0`. Além das funcionalidades centrais de operação, o projeto possui um cliente desktop para Windows, construído com Electron, distribuído por meio de instalador e preparado para orientar a configuração inicial da instalação. A escala publicada também pode ser exportada em PDF no formato de lista, PDF no formato de calendário e planilha Excel.
 
 Continuam fora do escopo atual do projeto funcionalidades como recuperação de senha por e-mail, múltiplas organizações, pagamentos, planos comerciais e infraestrutura gerenciada em produção.
 

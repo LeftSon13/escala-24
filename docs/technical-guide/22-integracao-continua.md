@@ -46,10 +46,11 @@ essa estratégia.
 ## Outros workflows
 
 `frontend-ci.yml` valida JavaScript, constrói a imagem frontend e testa a
-configuração Nginx. `container-images.yml` publica imagens backend/frontend no
-GHCR em tags `v*` ou por execução manual. `desktop-installer.yml` valida e
-constrói o instalador Windows. Esses workflows têm eventos e permissões
-próprios; não são um único pipeline universal.
+configuração Nginx. `secret-scan.yml` procura segredos adicionados
+acidentalmente ao repositório. `container-images.yml` publica imagens
+backend/frontend no GHCR em tags `v*` ou por execução manual.
+`desktop-installer.yml` valida e constrói o instalador Windows. Esses workflows
+têm eventos e permissões próprios; não são um único pipeline universal.
 
 O Backend CI publica `target/site/jacoco/` como artefato por 14 dias, mesmo
 quando o job falha (`if: always()`). Artefato de CI é resultado preservado para
@@ -82,7 +83,9 @@ possui permissões, eventos, concorrência e artefatos específicos.
 
 - [`backend-ci.yml`](../../.github/workflows/backend-ci.yml)
 - [`frontend-ci.yml`](../../.github/workflows/frontend-ci.yml)
+- [`secret-scan.yml`](../../.github/workflows/secret-scan.yml)
 - [`container-images.yml`](../../.github/workflows/container-images.yml)
+- [`desktop-installer.yml`](../../.github/workflows/desktop-installer.yml)
 - [`20 — Cobertura com JaCoCo`](./20-cobertura-com-jacoco.md)
 - [`19 — Testcontainers`](./19-testcontainers.md)
 
@@ -98,9 +101,10 @@ possui permissões, eventos, concorrência e artefatos específicos.
 
 ## Resumo
 
-O GitHub executa workflows distintos para backend, frontend, imagens e
-instalador. O Backend CI usa Ubuntu, Java 21, Maven Wrapper e `verify`, que
-integra testes, Testcontainers e JaCoCo, publicando o relatório como artefato.
+O GitHub executa workflows distintos para backend, frontend, verificação de
+segredos, imagens e instalador. O Backend CI usa Ubuntu, Java 21, Maven Wrapper
+e `verify`, que integra testes, Testcontainers e JaCoCo, publicando o relatório
+como artefato.
 
 > **Frase de fixação:** CI transforma uma mudança em uma verificação repetível,
 > mas o resultado ainda precisa ser interpretado.
